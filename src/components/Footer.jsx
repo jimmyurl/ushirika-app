@@ -1,96 +1,73 @@
-import { Coffee, Mail, Phone, MapPin, Facebook, Twitter, Instagram } from 'lucide-react';
+// Footer.jsx
+import { Coffee, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'; // Added Linkedin
 
-const Footer = () => {
-  return (
-    <footer className="footer">
-      <div className="footer-main">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-section">
-              <div className="footer-logo">
-                <div className="logo-icon">
-                  <Coffee size={32} color="#92400e" />
-                </div>
-                <div>
-                  <h3 className="footer-brand">KDCU Limited</h3>
-                  <p className="footer-tagline">"Ushirika Hai Kwa Maendeleo"</p>
-                </div>
-              </div>
-              <p className="footer-description">
-                Empowering coffee growers in the Kagera region of Tanzania through cooperative excellence and sustainable farming practices.
-              </p>
-              <div className="social-links">
-                <a href="#" className="social-link">
-                  <Facebook size={20} />
-                </a>
-                <a href="#" className="social-link">
-                  <Twitter size={20} />
-                </a>
-                <a href="#" className="social-link">
-                  <Instagram size={20} />
-                </a>
-              </div>
+const Footer = () => (
+  <footer style={{backgroundColor: '#1f2937', color: 'white', padding: '3rem 0 1rem'}}>
+    <div className="container">
+      <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', marginBottom: '2rem'}}>
+        <div>
+          <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
+            <Coffee size={32} color="#92400e" style={{marginRight: '0.5rem'}} />
+            <div>
+              <h3 style={{margin: '0', fontSize: '1.5rem'}}>KDCU Limited</h3>
+              <p style={{margin: '0', color: '#9ca3af'}}>Cooperative Excellence</p>
             </div>
-            
-            <div className="footer-section">
-              <h3 className="footer-title">Quick Links</h3>
-              <ul className="footer-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About Us</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#products">Products</a></li>
-                <li><a href="#investments">Investments</a></li>
-                <li><a href="#amcos">AMCOS</a></li>
-              </ul>
-            </div>
-            
-            <div className="footer-section">
-              <h3 className="footer-title">Our Services</h3>
-              <ul className="footer-links">
-                <li><a href="#">Coffee Processing</a></li>
-                <li><a href="#">Quality Control</a></li>
-                <li><a href="#">Farmer Training</a></li>
-                <li><a href="#">Market Access</a></li>
-                <li><a href="#">Certification Support</a></li>
-                <li><a href="#">Equipment Supply</a></li>
-              </ul>
-            </div>
-            
-            <div className="footer-section">
-              <h3 className="footer-title">Contact Info</h3>
-              <div className="contact-info">
-                <div className="contact-item">
-                  <MapPin size={16} />
-                  <span>Kayanga, Karagwe District<br />Kagera Region, Tanzania</span>
-                </div>
-                <div className="contact-item">
-                  <Phone size={16} />
-                  <span>+255 123 456 789</span>
-                </div>
-                <div className="contact-item">
-                  <Mail size={16} />
-                  <span>info@kdculimited.co.tz</span>
-                </div>
-              </div>
-            </div>
+          </div>
+          <p style={{color: '#9ca3af', lineHeight: '1.6'}}>
+            Karagwe District Co-operative Union Ltd - Empowering small-scale coffee growers 
+            in the Kagera region of Tanzania since establishment.
+          </p>
+        </div>
+        
+        <div>
+          <h4 style={{marginBottom: '1rem', color: '#92400e'}}>Quick Links</h4>
+          <ul style={{listStyle: 'none', padding: '0', margin: '0'}}>
+            <li style={{marginBottom: '0.5rem'}}>
+              <a href="/" style={{color: '#9ca3af', textDecoration: 'none'}}>Home</a>
+            </li>
+            <li style={{marginBottom: '0.5rem'}}>
+              <a href="/about" style={{color: '#9ca3af', textDecoration: 'none'}}>About Us</a>
+            </li>
+            <li style={{marginBottom: '0.5rem'}}>
+              <a href="/services" style={{color: '#9ca3af', textDecoration: 'none'}}>Services</a>
+            </li>
+            <li style={{marginBottom: '0.5rem'}}>
+              <a href="/contact" style={{color: '#9ca3af', textDecoration: 'none'}}>Contact</a>
+            </li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 style={{marginBottom: '1rem', color: '#92400e'}}>Contact Info</h4>
+          <div style={{display: 'flex', alignItems: 'center', marginBottom: '0.5rem'}}>
+            <MapPin size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
+            <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>Karagwe, Kagera Region, Tanzania</span>
+          </div>
+          <div style={{display: 'flex', alignItems: 'center', marginBottom: '0.5rem'}}>
+            <Phone size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
+            <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>+255 28 222 xxxx</span>
+          </div>
+          <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
+            <Mail size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
+            <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>info@kdculimited.co.tz</span>
+          </div>
+          
+          <div style={{display: 'flex', gap: '1rem'}}>
+            <Facebook size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
+            <Twitter size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
+            <Instagram size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
+            <Linkedin size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
           </div>
         </div>
       </div>
       
-      <div className="footer-bottom">
-        <div className="container">
-          <div className="footer-bottom-content">
-            <p>&copy; 2024 KDCU Limited. All rights reserved.</p>
-            <div className="footer-bottom-links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="/contact">Contact Us</a>
-            </div>
-          </div>
-        </div>
+      <div style={{borderTop: '1px solid #374151', paddingTop: '1rem', textAlign: 'center'}}>
+        <p style={{margin: '0', color: '#9ca3af', fontSize: '0.9rem'}}>
+          © 2024 KDCU Limited. All rights reserved. | Ushirika Hai Kwa Maendeleo
+        </p>
       </div>
-    </footer>
-  );
-};
+    </div>
+  </footer>
+);
 
 export default Footer;

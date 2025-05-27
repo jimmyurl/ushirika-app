@@ -1,14 +1,9 @@
 // src/pages/AboutPage.jsx
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import { Users, Award, TrendingUp } from 'lucide-react';
 
 const AboutPage = () => {
   return (
     <div className="page-container">
-      {/* Add Header component here */}
-      <Header />
-      
       {/* Hero Section for About */}
       <section className="hero">
         <div className="hero-container">
@@ -123,9 +118,6 @@ const AboutPage = () => {
           </div>
         </div>
       </section>
-
-      {/* Add Footer component here */}
-      <Footer />
     </div>
   );
 };
