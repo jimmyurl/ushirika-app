@@ -1,6 +1,9 @@
-import { Users, Award, TrendingUp } from 'lucide-react';
+// src/pages/AboutPage.jsx
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { Users, Award, TrendingUp } from 'lucide-react'; // Add this import
 
-const About = () => {
+const AboutPage = () => {
   return (
     <div className="page-container">
       {/* Hero Section for About */}
@@ -121,4 +124,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default AboutPage;

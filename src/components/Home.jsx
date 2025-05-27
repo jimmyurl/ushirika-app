@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Coffee, Users, Award, TrendingUp, Mail, Phone, MapPin, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Coffee, Users, Award, TrendingUp, Menu, X, ChevronLeft, ChevronRight, Star, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import '../Home.css';
 
 const Home = () => {
@@ -27,6 +27,63 @@ const Home = () => {
       title: "Community Partnership",
       subtitle: "Stronger Together",
       description: "Join our family of dedicated farmers working towards cooperative excellence and shared prosperity."
+    }
+  ];
+
+  const teamMembers = [
+    {
+      name: "John Mwasika",
+      position: "General Manager",
+      description: "Leading KDCU with over 15 years of cooperative management experience."
+    },
+    {
+      name: "Mary Kagoma",
+      position: "Quality Control Manager",
+      description: "Ensuring our coffee meets international standards and certifications."
+    },
+    {
+      name: "Peter Rweyemamu",
+      position: "Operations Director",
+      description: "Overseeing daily operations and member cooperative relations."
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: "James Bahati",
+      role: "Coffee Farmer",
+      cooperative: "Nyakahanga AMCOS",
+      text: "KDCU has transformed my farming practices. The training and fair prices have improved my family's livelihood significantly."
+    },
+    {
+      name: "Grace Mutabazi",
+      role: "Women's Group Leader",
+      cooperative: "Bukoba AMCOS",
+      text: "Through KDCU's programs, women farmers in our area have gained valuable skills and economic independence."
+    },
+    {
+      name: "Emmanuel Kagaruki",
+      role: "Youth Farmer",
+      cooperative: "Karagwe AMCOS",
+      text: "The youth development programs have encouraged young people to stay in agriculture and embrace modern farming."
+    }
+  ];
+
+  const investments = [
+    {
+      title: "Coffee Mill Expansion",
+      amount: "USD 500,000",
+      description: "Upgrading processing capacity to handle increased production from member cooperatives."
+    },
+    {
+      title: "Quality Laboratory",
+      amount: "USD 150,000",
+      description: "Modern quality testing equipment to ensure coffee meets international standards."
+    },
+    {
+      title: "Farmer Training Centers",
+      amount: "USD 200,000",
+      description: "Establishing regional training facilities for continuous farmer education."
     }
   ];
 
@@ -79,12 +136,12 @@ const Home = () => {
           </div>
 
           <nav className="nav">
-            <a href="#home" className="nav-link">Home</a>
-            <a href="#about" className="nav-link">About</a>
-            <a href="#services" className="nav-link">Services</a>
-            <a href="#investments" className="nav-link">Investments</a>
-            <a href="#amcos" className="nav-link">Amcos</a>
-            <a href="#contact" className="nav-link">Contact</a>
+            <a href="/" className="nav-link">Home</a>
+            <a href="/about" className="nav-link">About</a>
+            <a href="/services" className="nav-link">Services</a>
+            <a href="/investments" className="nav-link">Investments</a>
+            <a href="/amcos" className="nav-link">AMCOS</a>
+            <a href="/contact" className="nav-link">Contact</a>
           </nav>
 
           <button
@@ -97,12 +154,12 @@ const Home = () => {
 
         {isMenuOpen && (
           <div className="mobile-nav">
-            <a href="#home" className="mobile-nav-link">Home</a>
-            <a href="#about" className="mobile-nav-link">About</a>
-            <a href="#services" className="mobile-nav-link">Services</a>
-            <a href="#investments" className="mobile-nav-link">Investments</a>
-            <a href="#amcos" className="mobile-nav-link">Amcos</a>
-            <a href="#contact" className="mobile-nav-link">Contact</a>
+            <a href="/" className="mobile-nav-link">Home</a>
+            <a href="/about" className="mobile-nav-link">About</a>
+            <a href="/services" className="mobile-nav-link">Services</a>
+            <a href="/investments" className="mobile-nav-link">Investments</a>
+            <a href="/amcos" className="mobile-nav-link">AMCOS</a>
+            <a href="/contact" className="mobile-nav-link">Contact</a>
           </div>
         )}
       </div>
@@ -143,73 +200,45 @@ const Home = () => {
     </section>
   );
 
-  const HeroSection = () => (
-    <section id="home" className="hero">
-      <div className="hero-container">
-        <h1 className="hero-title">
-          Welcome to KDCU
-          <span className="hero-subtitle">"Ushirika Hai Kwa Maendeleo"</span>
-        </h1>
-        <p className="hero-description">
-          Karagwe District Co-operative Union Ltd (KDCU) is an organization of small-scale coffee growers in the Kagera region in the northwest corner of Tanzania.
-        </p>
-        <div className="hero-buttons">
-          <button className="primary-button">
-            Learn More
-          </button>
-          <button className="secondary-button">
-            Contact Us
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-
-  const AboutSection = () => (
-    <section id="about" className="section section-white">
+  const StatsSection = () => (
+    <section className="section section-white">
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">About KDCU Limited</h2>
+          <h2 className="section-title">Our Impact</h2>
           <p className="section-description">
-            Welcome to <span style={{fontWeight: 'bold'}}>KDCU Limited</span>
+            Making a difference in the lives of coffee farmers across Kagera region
           </p>
         </div>
         
-        <div style={{display: 'flex', flexDirection: 'column', gap: '2rem'}}>
-          <p className="card-text">
-            Karagwe District Co-operative Union Ltd (KDCU) is an organisation of small-scale coffee growers in the Kagera region in the northwest corner of Tanzania, about 200 miles south of the equator. The region has a population of around 408,000 and shares borders with Uganda to the north, Rwanda and Burundi to the west, and Lake Victoria to the east. The KDCU head office is in Kayanga, about 100 miles west of Bukoba, the regional capital.
-          </p>
+        <div className="grid-3">
+          <div className="card">
+            <div className="card-icon">
+              <Users size={32} />
+            </div>
+            <h3 className="card-title">132 AMCOS</h3>
+            <p className="card-text">
+              Member cooperatives united under our union
+            </p>
+          </div>
           
-          <div className="grid-3">
-            <div className="card">
-              <div className="card-icon">
-                <Users size={32} />
-              </div>
-              <h3 className="card-title">132 AMCOS</h3>
-              <p className="card-text">
-                Member cooperatives united under our union
-              </p>
+          <div className="card">
+            <div className="card-icon">
+              <Award size={32} />
             </div>
-            
-            <div className="card">
-              <div className="card-icon">
-                <Award size={32} />
-              </div>
-              <h3 className="card-title">54 Staff</h3>
-              <p className="card-text">
-                Dedicated professionals working for our members
-              </p>
+            <h3 className="card-title">54 Staff</h3>
+            <p className="card-text">
+              Dedicated professionals working for our members
+            </p>
+          </div>
+          
+          <div className="card">
+            <div className="card-icon">
+              <TrendingUp size={32} />
             </div>
-            
-            <div className="card">
-              <div className="card-icon">
-                <TrendingUp size={32} />
-              </div>
-              <h3 className="card-title">12,342,899</h3>
-              <p className="card-text">
-                Coffee estimates demonstrating our scale
-              </p>
-            </div>
+            <h3 className="card-title">12,342,899</h3>
+            <p className="card-text">
+              Coffee plants under our cooperative network
+            </p>
           </div>
         </div>
       </div>
@@ -217,7 +246,7 @@ const Home = () => {
   );
 
   const ProductsSection = () => (
-    <section id="products" className="section section-light">
+    <section id="products" className="section section-white">
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">Our Coffee Products</h2>
@@ -230,19 +259,16 @@ const Home = () => {
           {[
             { 
               name: "Premium Coffee", 
-              image: "premium.jpg", 
               description: "Premium Coffee is always fresh and our beans are locally roasted right here in Tanzania.",
               price: "1,300"
             },
             { 
               name: "4C Coffee Certification", 
-              image: "4c.jpg", 
               description: "4C certification applies high standards on economic, social and environmental conditions for coffee production and processing to establish sustainable practices.",
               price: "1,800"
             },
             { 
               name: "Organic Coffee", 
-              image: "organic.webp", 
               description: "Organic coffee is coffee produced without the aid of artificial chemical substances, such as certain additives or some pesticides and herbicides.",
               price: "2,100"
             }
@@ -254,7 +280,9 @@ const Home = () => {
               <div className="product-content">
                 <h3 className="product-title">{product.name}</h3>
                 <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1rem'}}>
-                  <small style={{color: '#92400e'}}>★★★★★</small>
+                  <div style={{color: '#92400e'}}>
+                    {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
+                  </div>
                 </div>
                 <p className="product-notes">{product.description}</p>
                 <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '1rem'}}>
@@ -273,43 +301,95 @@ const Home = () => {
     </section>
   );
 
-  const TeamSection = () => (
-    <section id="team" className="section section-white">
+  const InvestmentsSection = () => (
+    <section id="investments" className="section section-light">
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">Our Management</h2>
+          <h2 className="section-title">Our Investments</h2>
           <p className="section-description">
-            Meet the dedicated team leading our cooperative union forward
+            Strategic investments in infrastructure and technology
           </p>
         </div>
         
-        <div className="grid-4">
-          {[
-            { name: "Arnold Kikasiga", role: "General Manager", image: "kdcu-office.JPG" },
-            { name: "Steve Cyliro", role: "Marketing Manager", image: "kdcu-office.JPG" },
-            { name: "Mnyama", role: "Chief Accountant", image: "kdcu-office.JPG" },
-            { name: "Dada Omutwe", role: "HR Manager", image: "kdcu-office.JPG" }
-          ].map((member, index) => (
-            <div key={index} className="team-member">
-              <div style={{position: 'relative'}}>
-                <div style={{height: '300px', background: '#ddd', borderRadius: '0.5rem', overflow: 'hidden'}}>
-                  <img src={`img/${member.image}`} alt={member.name} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
-                </div>
-                <div style={{position: 'absolute', left: '50%', top: '100%', transform: 'translate(-50%, -50%)', display: 'flex', alignItems: 'center'}}>
-                  <a href="#" style={{backgroundColor: '#92400e', color: 'white', padding: '0.5rem', borderRadius: '50%', margin: '0 0.25rem'}}>
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                  <a href="#" style={{backgroundColor: '#92400e', color: 'white', padding: '0.5rem', borderRadius: '50%', margin: '0 0.25rem'}}>
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                  <a href="#" style={{backgroundColor: '#92400e', color: 'white', padding: '0.5rem', borderRadius: '50%', margin: '0 0.25rem'}}>
-                    <i className="fab fa-instagram"></i>
-                  </a>
-                </div>
+        <div className="grid-3">
+          {investments.map((investment, index) => (
+            <div key={index} className="card">
+              <h3 className="card-title">{investment.title}</h3>
+              <p className="investment-amount" style={{color: '#92400e', fontWeight: 'bold', fontSize: '1.2rem', margin: '1rem 0'}}>
+                {investment.amount}
+              </p>
+              <p className="card-text">{investment.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+
+  const TeamSection = () => (
+    <section className="section section-white">
+      <div className="container">
+        <div className="section-header">
+          <h2 className="section-title">Our Leadership Team</h2>
+          <p className="section-description">
+            Experienced professionals dedicated to cooperative success
+          </p>
+        </div>
+        
+        <div className="grid-3">
+          {teamMembers.map((member, index) => (
+            <div key={index} className="card">
+              <div className="team-avatar" style={{
+                width: '80px', 
+                height: '80px', 
+                borderRadius: '50%', 
+                backgroundColor: '#92400e', 
+                margin: '0 auto 1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: '2rem',
+                fontWeight: 'bold'
+              }}>
+                {member.name.split(' ').map(n => n[0]).join('')}
               </div>
-              <div style={{textAlign: 'center', padding: '1rem', marginTop: '1.5rem'}}>
-                <h3 className="team -name">{member.name}</h3>
-                <p style={{color: '#666', fontSize: '0.9rem'}}>{member.role}</p>
+              <h3 className="card-title">{member.name}</h3>
+              <p style={{color: '#92400e', fontWeight: 'bold', marginBottom: '1rem'}}>
+                {member.position}
+              </p>
+              <p className="card-text">{member.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+
+  const TestimonialsSection = () => (
+    <section className="section section-light">
+      <div className="container">
+        <div className="section-header">
+          <h2 className="section-title">What Our Members Say</h2>
+          <p className="section-description">
+            Hear from our valued cooperative members
+          </p>
+        </div>
+        
+        <div className="grid-3">
+          {testimonials.map((testimonial, index) => (
+            <div key={index} className="card-white">
+              <div style={{color: '#92400e', marginBottom: '1rem'}}>
+                {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
+              </div>
+              <p className="card-text" style={{fontStyle: 'italic', marginBottom: '1.5rem'}}>
+                "{testimonial.text}"
+              </p>
+              <div>
+                <h4 style={{margin: '0', color: '#1f2937'}}>{testimonial.name}</h4>
+                <p style={{margin: '0.25rem 0 0 0', color: '#92400e', fontSize: '0.9rem'}}>
+                  {testimonial.role} - {testimonial.cooperative}
+                </p>
               </div>
             </div>
           ))}
@@ -318,93 +398,70 @@ const Home = () => {
     </section>
   );
 
-  const ContactSection = () => (
-    <section id="contact" className="section section-light">
-      <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">Contact Us</h2>
-          <p className="section-description">
-            Get in touch with us for more information about our services
-          </p>
-        </div>
-        
-        <div className="grid-2">
-          <div className="contact-info">
-            <div className="contact-item">
-              <MapPin size={24} />
-              <div>
-                <h3>Address</h3>
-                <p>Kayanga, Karagwe District<br />Kagera Region, Tanzania</p>
-              </div>
-            </div>
-            
-            <div className="contact-item">
-              <Phone size={24} />
-              <div>
-                <h3>Phone</h3>
-                <p>+255 123 456 789</p>
-              </div>
-            </div>
-            
-            <div className="contact-item">
-              <Mail size={24} />
-              <div>
-                <h3>Email</h3>
-                <p>info@kdculimited.co.tz</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="contact-form">
-            <form>
-              <div className="form-group">
-                <input type="text" placeholder="Your Name" className="form-input" />
-              </div>
-              <div className="form-group">
-                <input type="email" placeholder="Your Email" className="form-input" />
-              </div>
-              <div className="form-group">
-                <textarea placeholder="Your Message" rows="5" className="form-input"></textarea>
-              </div>
-              <button type="submit" className="primary-button">
-                Send Message
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-
   const Footer = () => (
-    <footer className="footer">
+    <footer style={{backgroundColor: '#1f2937', color: 'white', padding: '3rem 0 1rem'}}>
       <div className="container">
-        <div className="footer-content">
-          <div className="footer-section">
-            <h3>KDCU Limited</h3>
-            <p>Empowering coffee growers in the Kagera region of Tanzania through cooperative excellence.</p>
+        <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', marginBottom: '2rem'}}>
+          <div>
+            <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
+              <Coffee size={32} color="#92400e" style={{marginRight: '0.5rem'}} />
+              <div>
+                <h3 style={{margin: '0', fontSize: '1.5rem'}}>KDCU Limited</h3>
+                <p style={{margin: '0', color: '#9ca3af'}}>Cooperative Excellence</p>
+              </div>
+            </div>
+            <p style={{color: '#9ca3af', lineHeight: '1.6'}}>
+              Karagwe District Co-operative Union Ltd - Empowering small-scale coffee growers 
+              in the Kagera region of Tanzania since establishment.
+            </p>
           </div>
           
-          <div className="footer-section">
-            <h3>Quick Links</h3>
-            <ul>
-              <li><a href="#home">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#services">Services</a></li>
-              <li><a href="#contact">Contact</a></li>
+          <div>
+            <h4 style={{marginBottom: '1rem', color: '#92400e'}}>Quick Links</h4>
+            <ul style={{listStyle: 'none', padding: '0', margin: '0'}}>
+              <li style={{marginBottom: '0.5rem'}}>
+                <a href="/" style={{color: '#9ca3af', textDecoration: 'none'}}>Home</a>
+              </li>
+              <li style={{marginBottom: '0.5rem'}}>
+                <a href="/about" style={{color: '#9ca3af', textDecoration: 'none'}}>About Us</a>
+              </li>
+              <li style={{marginBottom: '0.5rem'}}>
+                <a href="/services" style={{color: '#9ca3af', textDecoration: 'none'}}>Services</a>
+              </li>
+              <li style={{marginBottom: '0.5rem'}}>
+                <a href="/contact" style={{color: '#9ca3af', textDecoration: 'none'}}>Contact</a>
+              </li>
             </ul>
           </div>
           
-          <div className="footer-section">
-            <h3>Contact Info</h3>
-            <p>Kayanga, Karagwe District</p>
-            <p>Kagera Region, Tanzania</p>
-            <p>Phone: +255 123 456 789</p>
+          <div>
+            <h4 style={{marginBottom: '1rem', color: '#92400e'}}>Contact Info</h4>
+            <div style={{display: 'flex', alignItems: 'center', marginBottom: '0.5rem'}}>
+              <MapPin size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
+              <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>Karagwe, Kagera Region, Tanzania</span>
+            </div>
+            <div style={{display: 'flex', alignItems: 'center', marginBottom: '0.5rem'}}>
+              <Phone size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
+              <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>+255 28 222 xxxx</span>
+            </div>
+            <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
+              <Mail size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
+              <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>info@kdculimited.co.tz</span>
+            </div>
+            
+            <div style={{display: 'flex', gap: '1rem'}}>
+              <Facebook size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
+              <Twitter size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
+              <Instagram size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
+              <Linkedin size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
+            </div>
           </div>
         </div>
         
-        <div className="footer-bottom">
-          <p>&copy; 2024 KDCU Limited. All rights reserved.</p>
+        <div style={{borderTop: '1px solid #374151', paddingTop: '1rem', textAlign: 'center'}}>
+          <p style={{margin: '0', color: '#9ca3af', fontSize: '0.9rem'}}>
+            © 2024 KDCU Limited. All rights reserved. | Ushirika Hai Kwa Maendeleo
+          </p>
         </div>
       </div>
     </footer>
@@ -418,11 +475,11 @@ const Home = () => {
     <div className="App">
       <Header />
       <CarouselSection />
-      <HeroSection />
-      <AboutSection />
+      <StatsSection />
       <ProductsSection />
+      <InvestmentsSection />
       <TeamSection />
-      <ContactSection />
+      <TestimonialsSection />
       <Footer />
     </div>
   );
