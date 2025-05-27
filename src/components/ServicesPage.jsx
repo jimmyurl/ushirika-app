@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Coffee, Users, Award, TrendingUp, Menu, X, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, Send } from 'lucide-react';
+import { Coffee, Users, Award, TrendingUp, Send } from 'lucide-react'; // Removed Menu, X, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin
 
 const ServicesPage = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(''); // isMenuOpen and setIsMenuOpen are no longer needed here as Header is removed.
 
   const services = [
     {
@@ -34,50 +33,7 @@ const ServicesPage = () => {
     setEmail('');
   };
 
-  const Header = () => (
-    <header className="header">
-      <div className="header-container">
-        <div className="header-content">
-          <div className="logo">
-            <div className="logo-icon">
-              <Coffee size={32} color="#92400e" />
-            </div>
-            <div>
-              <h1 className="logo-text">KDCU Limited</h1>
-              <p className="logo-subtext">Cooperative Excellence</p>
-            </div>
-          </div>
-
-          <nav className="nav">
-            <a href="/" className="nav-link">Home</a>
-            <a href="/about" className="nav-link">About</a>
-            <a href="/services" className="nav-link active">Services</a>
-            <a href="/investments" className="nav-link">Investments</a>
-            <a href="/amcos" className="nav-link">AMCOS</a>
-            <a href="/contact" className="nav-link">Contact</a>
-          </nav>
-
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="mobile-menu-button"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {isMenuOpen && (
-          <div className="mobile-nav">
-            <a href="/" className="mobile-nav-link">Home</a>
-            <a href="/about" className="mobile-nav-link">About</a>
-            <a href="/services" className="mobile-nav-link">Services</a>
-            <a href="/investments" className="mobile-nav-link">Investments</a>
-            <a href="/amcos" className="mobile-nav-link">AMCOS</a>
-            <a href="/contact" className="mobile-nav-link">Contact</a>
-          </div>
-        )}
-      </div>
-    </header>
-  );
+  // Removed the Header component definition from here as it's handled globally in App.jsx
 
   const ServicesSection = () => (
     <section className="section section-light">
@@ -181,50 +137,16 @@ const ServicesPage = () => {
     </section>
   );
 
-  const Footer = () => (
-    <footer style={{backgroundColor: '#1f2937', color: 'white', padding: '3rem 0 1rem'}}>
-      <div className="container">
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', marginBottom: '2rem'}}>
-          <div>
-            <div style={{display: 'flex', alignItems: 'center', marginBottom: '0.5rem'}}>
-              <MapPin size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
-              <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>Karagwe, Kagera Region, Tanzania</span>
-            </div>
-            <div style={{display: 'flex', alignItems: 'center', marginBottom: '0.5rem'}}>
-              <Phone size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
-              <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>+255 28 222 xxxx</span>
-            </div>
-            <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
-              <Mail size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
-              <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>info@kdculimited.co.tz</span>
-            </div>
-            
-            <div style={{display: 'flex', gap: '1rem'}}>
-              <Facebook size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-              <Twitter size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-              <Instagram size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-              <Linkedin size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-            </div>
-          </div>
-        </div>
-        
-        <div style={{borderTop: '1px solid #374151', paddingTop: '1rem', textAlign: 'center'}}>
-          <p style={{margin: '0', color: '#9ca3af', fontSize: '0.9rem'}}>
-            © 2024 KDCU Limited. All rights reserved. | Ushirika Hai Kwa Maendeleo
-          </p>
-        </div>
-      </div>
-    </footer>
-  );
+  // Removed the Footer component definition from here as it's handled globally in App.jsx
 
   return (
     <div className="App">
-      <Header />
+      {/* <Header /> was removed from here */}
       <div style={{paddingTop: '80px'}}>
         <ServicesSection />
         <NewsletterSection />
       </div>
-      <Footer />
+      {/* <Footer /> was removed from here */}
     </div>
   );
 };
