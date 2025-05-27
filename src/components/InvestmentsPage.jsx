@@ -1,5 +1,5 @@
 // src/components/InvestmentsPage.jsx
-import { Coffee, TrendingUp, Award, Users, Menu, MapPin, Phone, Mail, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { Coffee, TrendingUp, Award, Users } from 'lucide-react'; // Removed Menu, MapPin, Phone, Mail, Facebook, Twitter, Instagram, Linkedin
 import '../Home.css';
 
 const InvestmentsPage = () => {
@@ -61,34 +61,7 @@ const InvestmentsPage = () => {
 
   return (
     <div className="App">
-      <header className="header">
-        <div className="header-container">
-          <div className="header-content">
-            <div className="logo">
-              <div className="logo-icon">
-                <Coffee size={32} color="#92400e" />
-              </div>
-              <div>
-                <h1 className="logo-text">KDCU Limited</h1>
-                <p className="logo-subtext">Cooperative Excellence</p>
-              </div>
-            </div>
-
-            <nav className="nav">
-              <a href="/" className="nav-link">Home</a>
-              <a href="/about" className="nav-link">About</a>
-              <a href="/services" className="nav-link">Services</a>
-              <a href="/investments" className="nav-link active">Investments</a>
-              <a href="/amcos" className="nav-link">AMCOS</a>
-              <a href="/contact" className="nav-link">Contact</a>
-            </nav>
-
-            <button className="mobile-menu-button">
-              <Menu size={24} />
-            </button>
-          </div>
-        </div>
-      </header>
+      {/* Removed the Header component definition from here */}
 
       <main>
         {/* Hero Section */}
@@ -174,73 +147,7 @@ const InvestmentsPage = () => {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer style={{backgroundColor: '#1f2937', color: 'white', padding: '3rem 0 1rem'}}>
-        <div className="container">
-          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', marginBottom: '2rem'}}>
-            <div>
-              <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
-                <Coffee size={32} color="#92400e" style={{marginRight: '0.5rem'}} />
-                <div>
-                  <h3 style={{margin: '0', fontSize: '1.5rem'}}>KDCU Limited</h3>
-                  <p style={{margin: '0', color: '#9ca3af'}}>Cooperative Excellence</p>
-                </div>
-              </div>
-              <p style={{color: '#9ca3af', lineHeight: '1.6'}}>
-                Karagwe District Co-operative Union Ltd - Empowering small-scale coffee growers 
-                in the Kagera region of Tanzania since establishment.
-              </p>
-            </div>
-            
-            <div>
-              <h4 style={{marginBottom: '1rem', color: '#92400e'}}>Quick Links</h4>
-              <ul style={{listStyle: 'none', padding: '0', margin: '0'}}>
-                <li style={{marginBottom: '0.5rem'}}>
-                  <a href="/" style={{color: '#9ca3af', textDecoration: 'none'}}>Home</a>
-                </li>
-                <li style={{marginBottom: '0.5rem'}}>
-                  <a href="/about" style={{color: '#9ca3af', textDecoration: 'none'}}>About Us</a>
-                </li>
-                <li style={{marginBottom: '0.5rem'}}>
-                  <a href="/services" style={{color: '#9ca3af', textDecoration: 'none'}}>Services</a>
-                </li>
-                <li style={{marginBottom: '0.5rem'}}>
-                  <a href="/contact" style={{color: '#9ca3af', textDecoration: 'none'}}>Contact</a>
-                </li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 style={{marginBottom: '1rem', color: '#92400e'}}>Contact Info</h4>
-              <div style={{display: 'flex', alignItems: 'center', marginBottom: '0.5rem'}}>
-                <MapPin size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
-                <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>Karagwe, Kagera Region, Tanzania</span>
-              </div>
-              <div style={{display: 'flex', alignItems: 'center', marginBottom: '0.5rem'}}>
-                <Phone size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
-                <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>+255 28 222 xxxx</span>
-              </div>
-              <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
-                <Mail size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
-                <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>info@kdculimited.co.tz</span>
-              </div>
-              
-              <div style={{display: 'flex', gap: '1rem'}}>
-                <Facebook size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-                <Twitter size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-                <Instagram size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-                <Linkedin size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-              </div>
-            </div>
-          </div>
-          
-          <div style={{borderTop: '1px solid #374151', paddingTop: '1rem', textAlign: 'center'}}>
-            <p style={{margin: '0', color: '#9ca3af', fontSize: '0.9rem'}}>
-              © 2024 KDCU Limited. All rights reserved. | Ushirika Hai Kwa Maendeleo
-            </p>
-          </div>
-        </div>
-      </footer>
+      {/* Removed the Footer component definition from here */}
     </div>
   );
 };
