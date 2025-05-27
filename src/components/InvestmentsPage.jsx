@@ -1,5 +1,5 @@
 // src/components/InvestmentsPage.jsx
-import { Coffee, TrendingUp, Award, Users } from 'lucide-react';
+import { Coffee, TrendingUp, Award, Users, Menu, MapPin, Phone, Mail, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import '../Home.css';
 
 const InvestmentsPage = () => {

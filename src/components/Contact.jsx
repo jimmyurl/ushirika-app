@@ -1,5 +1,6 @@
 import { Mail, Phone, MapPin } from 'lucide-react';
 
+
 const Contact = () => {
   return (
     <div className="page-container">

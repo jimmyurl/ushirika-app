@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Coffee, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import logo from '../assets/kdlogo.png'; // Import the logo
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,7 +17,7 @@ const Header = () => {
         <div className="header-content">
           <Link to="/" className="logo">
             <div className="logo-icon">
-              <Coffee size={32} color="#92400e" />
+              <img src={logo} alt="KDCU Logo" style={{ height: '40px' }} />
             </div>
             <div>
               <h1 className="logo-text">KDCU Limited</h1>
@@ -31,9 +32,15 @@ const Header = () => {
             <Link to="/about" className={`nav-link ${isActive('/about') ? 'active' : ''}`}>
               About
             </Link>
-            <a href="#services" className="nav-link">Services</a>
-            <a href="#investments" className="nav-link">Investments</a>
-            <a href="#amcos" className="nav-link">Amcos</a>
+            <Link to="/services" className={`nav-link ${isActive('/services') ? 'active' : ''}`}>
+              Services
+            </Link>
+            <Link to="/investments" className={`nav-link ${isActive('/investments') ? 'active' : ''}`}>
+              Investments
+            </Link>
+            <Link to="/amcos" className={`nav-link ${isActive('/amcos') ? 'active' : ''}`}>
+              AMCOS
+            </Link>
             <Link to="/contact" className={`nav-link ${isActive('/contact') ? 'active' : ''}`}>
               Contact
             </Link>
@@ -55,9 +62,15 @@ const Header = () => {
             <Link to="/about" className={`mobile-nav-link ${isActive('/about') ? 'active' : ''}`}>
               About
             </Link>
-            <a href="#services" className="mobile-nav-link">Services</a>
-            <a href="#investments" className="mobile-nav-link">Investments</a>
-            <a href="#amcos" className="mobile-nav-link">Amcos</a>
+            <Link to="/services" className={`mobile-nav-link ${isActive('/services') ? 'active' : ''}`}>
+              Services
+            </Link>
+            <Link to="/investments" className={`mobile-nav-link ${isActive('/investments') ? 'active' : ''}`}>
+              Investments
+            </Link>
+            <Link to="/amcos" className={`mobile-nav-link ${isActive('/amcos') ? 'active' : ''}`}>
+              AMCOS
+            </Link>
             <Link to="/contact" className={`mobile-nav-link ${isActive('/contact') ? 'active' : ''}`}>
               Contact
             </Link>

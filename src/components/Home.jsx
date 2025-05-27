@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Coffee, Users, Award, TrendingUp, Menu, X, ChevronLeft, ChevronRight, Star, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import '../Home.css';
+import logo from '../assets/kdlogo.png';
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -127,7 +128,7 @@ const Home = () => {
         <div className="header-content">
           <div className="logo">
             <div className="logo-icon">
-              <Coffee size={32} color="#92400e" />
+              <img src={logo} alt="KDCU Logo" style={{ height: '40px' }} /> {/* Updated logo */}
             </div>
             <div>
               <h1 className="logo-text">KDCU Limited</h1>
