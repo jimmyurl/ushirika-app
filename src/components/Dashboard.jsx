@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-// Removed useLocation and Link as they are no longer directly used for sidebar navigation
-import { 
-  Coffee, Users, Award, TrendingUp, Settings, Image, Edit3, Plus, 
+import {
+  Coffee, Users, Award, TrendingUp, Settings, Image, Edit3, Plus,
   Save, X, Upload, Eye, EyeOff, Trash2, AlertCircle, CheckCircle,
   Menu, LogOut, Home, MessageSquare, DollarSign, Building, User, Package, ChevronRight, Megaphone, UserCheck, ShoppingBag
-} from 'lucide-react'; 
+} from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import '../AdminDashboard.css'; // Import the new CSS
 
@@ -13,15 +12,11 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
-  // Removed isMenuOpen state as sidebar is removed
-  // const [isMenuOpen, setIsMenuOpen] = useState(false); 
-  // Removed useLocation as it's not used after sidebar removal
-  // const location = useLocation(); 
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Reintroduced isMenuOpen state
 
   // Data states (keeping original for now)
   const [carouselSlides, setCarouselSlides] = useState([
@@ -149,25 +144,25 @@ const Dashboard = () => {
     try {
       // Simulate API call - replace with actual Supabase operations
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Update local state based on modal type
       switch (modalType) {
         case 'carousel':
           if (editingItem) {
-            setCarouselSlides(prev => prev.map(slide => 
+            setCarouselSlides(prev => prev.map(slide =>
               slide.id === editingItem.id ? { ...slide, ...formData } : slide
             ));
           } else {
-            setCarouselSlides(prev => [...prev, { 
-              id: Date.now(), 
-              ...formData, 
-              order_index: prev.length 
+            setCarouselSlides(prev => [...prev, {
+              id: Date.now(),
+              ...formData,
+              order_index: prev.length
             }]);
           }
           break;
         case 'product':
           if (editingItem) {
-            setProducts(prev => prev.map(product => 
+            setProducts(prev => prev.map(product =>
               product.id === editingItem.id ? { ...product, ...formData } : product
             ));
           } else {
@@ -176,7 +171,7 @@ const Dashboard = () => {
           break;
         case 'team':
           if (editingItem) {
-            setTeamMembers(prev => prev.map(member => 
+            setTeamMembers(prev => prev.map(member =>
               member.id === editingItem.id ? { ...member, ...formData } : member
             ));
           } else {
@@ -185,7 +180,7 @@ const Dashboard = () => {
           break;
         case 'testimonial':
           if (editingItem) {
-            setTestimonials(prev => prev.map(testimonial => 
+            setTestimonials(prev => prev.map(testimonial =>
               testimonial.id === editingItem.id ? { ...testimonial, ...formData } : testimonial
             ));
           } else {
@@ -194,7 +189,7 @@ const Dashboard = () => {
           break;
         case 'investment':
           if (editingItem) {
-            setInvestments(prev => prev.map(investment => 
+            setInvestments(prev => prev.map(investment =>
               investment.id === editingItem.id ? { ...investment, ...formData } : investment
             ));
           } else {
@@ -202,7 +197,7 @@ const Dashboard = () => {
           }
           break;
       }
-      
+
       closeModal();
       showMessage('success', `${modalType} ${editingItem ? 'updated' : 'created'} successfully!`);
     } catch (error) {
@@ -214,11 +209,11 @@ const Dashboard = () => {
 
   const handleDelete = async (type, id) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
-    
+
     setLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       switch (type) {
         case 'carousel':
           setCarouselSlides(prev => prev.filter(slide => slide.id !== id));
@@ -236,7 +231,7 @@ const Dashboard = () => {
           setInvestments(prev => prev.filter(investment => investment.id !== id));
           break;
       }
-      
+
       showMessage('success', 'Item deleted successfully!');
     } catch (error) {
       showMessage('error', 'Failed to delete item. Please try again.');
@@ -272,31 +267,89 @@ const Dashboard = () => {
     }
   };
 
-  // Removed Sidebar component
-  // const Sidebar = () => (...)
+  // Sidebar Component - Reintroduced
+  const Sidebar = () => (
+    <aside className={`admin-sidebar ${isMenuOpen ? 'admin-sidebar-open' : ''}`}>
+      <div className="admin-sidebar-header">
+        <h2 className="admin-logo">KDCU Admin</h2>
+        <button className="admin-close-menu" onClick={() => setIsMenuOpen(false)}>
+          <X size={20} />
+        </button>
+      </div>
+      <nav className="admin-nav">
+        <ul className="admin-nav-list">
+          <li className={`admin-nav-item ${activeTab === 'overview' ? 'admin-active' : ''}`}>
+            <button onClick={() => { setActiveTab('overview'); setIsMenuOpen(false); }}>
+              <Home size={18} /> Overview
+            </button>
+          </li>
+          <li className={`admin-nav-item ${activeTab === 'carousel' ? 'admin-active' : ''}`}>
+            <button onClick={() => { setActiveTab('carousel'); setIsMenuOpen(false); }}>
+              <Image size={18} /> Hero Carousel
+            </button>
+          </li>
+          <li className={`admin-nav-item ${activeTab === 'stats' ? 'admin-active' : ''}`}>
+            <button onClick={() => { setActiveTab('stats'); setIsMenuOpen(false); }}>
+              <TrendingUp size={18} /> Statistics
+            </button>
+          </li>
+          <li className={`admin-nav-item ${activeTab === 'products' ? 'admin-active' : ''}`}>
+            <button onClick={() => { setActiveTab('products'); setIsMenuOpen(false); }}>
+              <Package size={18} /> Products
+            </button>
+          </li>
+          <li className={`admin-nav-item ${activeTab === 'team' ? 'admin-active' : ''}`}>
+            <button onClick={() => { setActiveTab('team'); setIsMenuOpen(false); }}>
+              <Users size={18} /> Team
+            </button>
+          </li>
+          <li className={`admin-nav-item ${activeTab === 'testimonials' ? 'admin-active' : ''}`}>
+            <button onClick={() => { setActiveTab('testimonials'); setIsMenuOpen(false); }}>
+              <MessageSquare size={18} /> Testimonials
+            </button>
+          </li>
+          <li className={`admin-nav-item ${activeTab === 'investments' ? 'admin-active' : ''}`}>
+            <button onClick={() => { setActiveTab('investments'); setIsMenuOpen(false); }}>
+              <DollarSign size={18} /> Investments
+            </button>
+          </li>
+          <li className={`admin-nav-item ${activeTab === 'settings' ? 'admin-active' : ''}`}>
+            <button onClick={() => { setActiveTab('settings'); setIsMenuOpen(false); }}>
+              <Settings size={18} /> Settings
+            </button>
+          </li>
+          <li className="admin-nav-item admin-logout-button">
+            <button onClick={handleLogout}>
+              <LogOut size={18} /> Log Out
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  );
 
   const Header = () => (
-    <header className="admin-header"> 
-      <div className="admin-header-container"> 
-        {/* Removed menu button for mobile as sidebar is removed */}
-        {/* <button 
-          onClick={() => setIsMenuOpen(true)} 
-          className="admin-menu-button" 
+    <header className="admin-header">
+      <div className="admin-header-container">
+        {/* Reintroduced menu button for mobile */}
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          className="admin-menu-button"
         >
           <Menu size={20} />
-        </button> */}
-        
-        <h1 className="admin-page-title"> 
+        </button>
+
+        <h1 className="admin-page-title">
           {getCurrentPageTitle()}
         </h1>
-        
-        <div className="admin-user-menu"> 
-          <span className="admin-user-name">Admin</span> 
-          <div className="admin-user-avatar"> 
+
+        <div className="admin-user-menu">
+          <span className="admin-user-name">Admin</span>
+          <div className="admin-user-avatar">
             <User size={18} />
           </div>
-          <button 
-            className="admin-logout-icon" 
+          <button
+            className="admin-logout-icon"
             onClick={handleLogout}
             type="button"
           >
@@ -308,8 +361,8 @@ const Dashboard = () => {
   );
 
   const OverviewTab = () => (
-    <div className="admin-overview"> 
-      <div className="admin-welcome-banner"> 
+    <div className="admin-overview">
+      <div className="admin-welcome-banner">
         <div className="admin-welcome-content">
           <h1 className="admin-welcome-title">Welcome to KDCU Admin Dashboard</h1>
           <p className="admin-welcome-subtitle">
@@ -328,25 +381,25 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="admin-dashboard-stats"> 
-        <div className="admin-stat-card"> 
+      <div className="admin-dashboard-stats">
+        <div className="admin-stat-card">
           <div className="admin-stat-header">Total AMCOS</div>
           <div className="admin-stat-number">{stats.amcos_count}</div>
-          <div className="admin-stat-trend admin-trend-up">↑ 12.5%</div> 
+          <div className="admin-stat-trend admin-trend-up">↑ 12.5%</div>
         </div>
-        
+
         <div className="admin-stat-card">
           <div className="admin-stat-header">Staff Members</div>
           <div className="admin-stat-number">{stats.staff_count}</div>
           <div className="admin-stat-trend admin-trend-up">↑ 8.3%</div>
         </div>
-        
+
         <div className="admin-stat-card">
           <div className="admin-stat-header">Coffee Plants</div>
           <div className="admin-stat-number">{stats.coffee_plants.toLocaleString()}</div>
           <div className="admin-stat-trend admin-trend-up">↑ 15.2%</div>
         </div>
-        
+
         <div className="admin-stat-card">
           <div className="admin-stat-header">Active Farmers</div>
           <div className="admin-stat-number">{stats.active_farmers.toLocaleString()}</div>
@@ -354,8 +407,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <h2 className="admin-section-title">Key Management Areas</h2> 
-      <div className="admin-stats-grid"> 
+      <h2 className="admin-section-title">Key Management Areas</h2>
+      <div className="admin-stats-grid">
         <div className="admin-card">
           <div className="admin-card-header">
             <Image size={18} /> Hero Section
@@ -366,7 +419,7 @@ const Dashboard = () => {
             Edit Hero <ChevronRight size={16} />
           </button>
         </div>
-        
+
         <div className="admin-card">
           <div className="admin-card-header">
             <Package size={18} /> Products
@@ -453,14 +506,14 @@ const Dashboard = () => {
         return <OverviewTab />;
       case 'carousel':
         return (
-          <DataTable 
-            data={carouselSlides} 
-            type="carousel" 
+          <DataTable
+            data={carouselSlides}
+            type="carousel"
             columns={[
               { key: 'title', label: 'Title' },
               { key: 'subtitle', label: 'Subtitle' },
               { key: 'is_active', label: 'Active', render: (val) => val ? 'Yes' : 'No' }
-            ]} 
+            ]}
           />
         );
       case 'stats':
@@ -477,7 +530,7 @@ const Dashboard = () => {
                   className="admin-input"
                 />
               </div>
-              
+
               <div>
                 <label className="admin-label">Staff Count</label>
                 <input
@@ -487,7 +540,7 @@ const Dashboard = () => {
                   className="admin-input"
                 />
               </div>
-              
+
               <div>
                 <label className="admin-label">Coffee Plants</label>
                 <input
@@ -497,7 +550,7 @@ const Dashboard = () => {
                   className="admin-input"
                 />
               </div>
-              
+
               <div>
                 <label className="admin-label">Active Farmers</label>
                 <input
@@ -515,52 +568,52 @@ const Dashboard = () => {
         );
       case 'products':
         return (
-          <DataTable 
-            data={products} 
-            type="product" 
+          <DataTable
+            data={products}
+            type="product"
             columns={[
               { key: 'name', label: 'Product Name' },
               { key: 'price', label: 'Price' },
               { key: 'category', label: 'Category' },
               { key: 'is_active', label: 'Active', render: (val) => val ? 'Yes' : 'No' }
-            ]} 
+            ]}
           />
         );
       case 'team':
         return (
-          <DataTable 
-            data={teamMembers} 
-            type="team" 
+          <DataTable
+            data={teamMembers}
+            type="team"
             columns={[
               { key: 'name', label: 'Name' },
               { key: 'position', label: 'Position' },
               { key: 'email', label: 'Email' }
-            ]} 
+            ]}
           />
         );
       case 'testimonials':
         return (
-          <DataTable 
-            data={testimonials} 
-            type="testimonial" 
+          <DataTable
+            data={testimonials}
+            type="testimonial"
             columns={[
               { key: 'name', label: 'Name' },
               { key: 'role', label: 'Role' },
               { key: 'text', label: 'Testimonial', render: (val) => `${val.substring(0, 50)}...` },
               { key: 'rating', label: 'Rating' }
-            ]} 
+            ]}
           />
         );
       case 'investments':
         return (
-          <DataTable 
-            data={investments} 
-            type="investment" 
+          <DataTable
+            data={investments}
+            type="investment"
             columns={[
               { key: 'title', label: 'Title' },
               { key: 'amount', label: 'Amount' },
               { key: 'status', label: 'Status' }
-            ]} 
+            ]}
           />
         );
       case 'settings':
@@ -576,7 +629,7 @@ const Dashboard = () => {
                   className="admin-input"
                 />
               </div>
-              
+
               <div>
                 <label className="admin-label">Contact Email</label>
                 <input
@@ -585,7 +638,7 @@ const Dashboard = () => {
                   className="admin-input"
                 />
               </div>
-              
+
               <div>
                 <label className="admin-label">Contact Phone</label>
                 <input
@@ -594,7 +647,7 @@ const Dashboard = () => {
                   className="admin-input"
                 />
               </div>
-              
+
               <div>
                 <label className="admin-label">Address</label>
                 <textarea
@@ -603,31 +656,31 @@ const Dashboard = () => {
                   className="admin-input"
                 />
               </div>
-              
+
               <button className="admin-btn admin-btn-primary">
                 Save Settings
               </button>
             </div>
           </div>
         );
-      
+
       default:
         return <div>Select a tab to manage content</div>;
     }
   };
 
   const DataTable = ({ data, type, columns }) => (
-    <div className="admin-panel"> 
-      <div className="admin-panel-header"> 
+    <div className="admin-panel">
+      <div className="admin-panel-header">
         <h3 className="admin-section-title">
           {type.charAt(0).toUpperCase() + type.slice(1)} Management
         </h3>
-        <button onClick={() => openModal(type)} className="admin-btn admin-btn-primary"> 
+        <button onClick={() => openModal(type)} className="admin-btn admin-btn-primary">
           <Plus size={16} /> Add New
         </button>
       </div>
-      <div className="admin-table-container"> 
-        <table className="admin-table"> 
+      <div className="admin-table-container">
+        <table className="admin-table">
           <thead>
             <tr>
               {columns.map(col => (
@@ -647,11 +700,11 @@ const Dashboard = () => {
                   </td>
                 ))}
                 <td>
-                  <div className="admin-action-buttons"> 
-                    <button onClick={() => openModal(type, item)} className="admin-btn admin-btn-icon"> 
+                  <div className="admin-action-buttons">
+                    <button onClick={() => openModal(type, item)} className="admin-btn admin-btn-icon">
                       <Edit3 size={16} />
                     </button>
-                    <button onClick={() => handleDelete(type, item.id)} className="admin-btn admin-btn-icon admin-btn-danger"> 
+                    <button onClick={() => handleDelete(type, item.id)} className="admin-btn admin-btn-icon admin-btn-danger">
                       <Trash2 size={16} />
                     </button>
                   </div>
@@ -671,9 +724,9 @@ const Dashboard = () => {
         case 'carousel':
           return (
             <>
-              <div className="admin-form-group"> 
+              <div className="admin-form-group">
                 <label className="admin-label">Title</label>
-                <input type="text" value={formData.title || ''} onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} className="admin-input" /> 
+                <input type="text" value={formData.title || ''} onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} className="admin-input" />
               </div>
               <div className="admin-form-group">
                 <label className="admin-label">Subtitle</label>
@@ -687,7 +740,7 @@ const Dashboard = () => {
                 <label className="admin-label">Image URL</label>
                 <input type="url" value={formData.image_url || ''} onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))} className="admin-input" />
               </div>
-              <div className="admin-form-group admin-checkbox-group"> 
+              <div className="admin-form-group admin-checkbox-group">
                 <input type="checkbox" checked={formData.is_active || false} onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))} id="carousel-active" />
                 <label htmlFor="carousel-active" className="admin-checkbox-label">Is Active</label>
               </div>
@@ -823,20 +876,20 @@ const Dashboard = () => {
     };
 
     return (
-      <div className="admin-modal-overlay"> 
-        <div className="admin-modal-content"> 
-          <div className="admin-modal-header"> 
+      <div className="admin-modal-overlay">
+        <div className="admin-modal-content">
+          <div className="admin-modal-header">
             <h3 className="admin-modal-title">
               {editingItem ? `Edit ${modalType}` : `Add New ${modalType}`}
             </h3>
-            <button onClick={closeModal} className="admin-modal-close"> 
+            <button onClick={closeModal} className="admin-modal-close">
               <X size={20} />
             </button>
           </div>
-          <div className="admin-modal-body"> 
+          <div className="admin-modal-body">
             {renderFormFields()}
           </div>
-          <div className="admin-modal-footer"> 
+          <div className="admin-modal-footer">
             <button onClick={closeModal} className="admin-btn admin-btn-secondary">
               Cancel
             </button>
@@ -850,15 +903,15 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="admin-dashboard"> {/* Removed admin-mobile-sidebar-open class */}
-      {/* Removed Sidebar component */}
-      <div className="admin-content-wrapper"> 
+    <div className={`admin-dashboard ${isMenuOpen ? 'admin-mobile-sidebar-open' : ''}`}> {/* Added admin-mobile-sidebar-open class conditionally */}
+      <Sidebar /> {/* Reintroduced Sidebar component */}
+      <div className="admin-content-wrapper">
         <Header />
-        <main className="admin-content"> 
+        <main className="admin-content">
           {renderTabContent()}
         </main>
       </div>
-      <Modal /> 
+      <Modal />
     </div>
   );
 };
