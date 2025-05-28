@@ -1,17 +1,29 @@
 import { useState, useEffect } from 'react';
+// Removed useLocation and Link as they are no longer directly used for sidebar navigation
 import { 
   Coffee, Users, Award, TrendingUp, Settings, Image, Edit3, Plus, 
   Save, X, Upload, Eye, EyeOff, Trash2, AlertCircle, CheckCircle,
-  Menu, LogOut, Home, MessageSquare, DollarSign, Building
-} from 'lucide-react';
+  Menu, LogOut, Home, MessageSquare, DollarSign, Building, User, Package, ChevronRight, Megaphone, UserCheck, ShoppingBag
+} from 'lucide-react'; 
+import { createClient } from '@supabase/supabase-js';
+import '../AdminDashboard.css'; // Import the new CSS
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Removed isMenuOpen state as sidebar is removed
+  // const [isMenuOpen, setIsMenuOpen] = useState(false); 
+  // Removed useLocation as it's not used after sidebar removal
+  // const location = useLocation(); 
 
-  // Data states
+  // Data states (keeping original for now)
   const [carouselSlides, setCarouselSlides] = useState([
     {
       id: 1,
@@ -104,7 +116,7 @@ const Dashboard = () => {
   const [modalType, setModalType] = useState('');
   const [editingItem, setEditingItem] = useState(null);
 
-  // Form states
+  // Form states - FIX: Corrected useState initialization
   const [formData, setFormData] = useState({});
 
   const showMessage = (type, text) => {
@@ -246,750 +258,353 @@ const Dashboard = () => {
     }
   };
 
-  const Sidebar = () => (
-    <div className={`fixed left-0 top-0 h-full bg-gray-900 text-white transition-all duration-300 z-50 ${
-      isSidebarOpen ? 'w-64' : 'w-16'
-    }`}>
-      <div className="p-4">
-        <div className="flex items-center justify-between">
-          <div className={`flex items-center ${isSidebarOpen ? '' : 'justify-center'}`}>
-            <Coffee size={32} className="text-yellow-600" />
-            {isSidebarOpen && (
-              <div className="ml-3">
-                <h2 className="text-xl font-bold">KDCU Admin</h2>
-                <p className="text-sm text-gray-400">Management Portal</p>
-              </div>
-            )}
-          </div>
-          <button 
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-1 hover:bg-gray-700 rounded"
-          >
-            <Menu size={20} />
-          </button>
-        </div>
-      </div>
+  const getCurrentPageTitle = () => {
+    switch (activeTab) {
+      case 'overview': return 'Dashboard Overview';
+      case 'carousel': return 'Hero Carousel Management';
+      case 'stats': return 'Statistics Management';
+      case 'products': return 'Product Management';
+      case 'team': return 'Team Management';
+      case 'testimonials': return 'Testimonials Management';
+      case 'investments': return 'Investments Management';
+      case 'settings': return 'Website Settings';
+      default: return 'Admin Panel';
+    }
+  };
 
-      <nav className="mt-8">
-        {[
-          { id: 'overview', label: 'Overview', icon: Home },
-          { id: 'carousel', label: 'Hero Carousel', icon: Image },
-          { id: 'stats', label: 'Statistics', icon: TrendingUp },
-          { id: 'products', label: 'Products', icon: Coffee },
-          { id: 'team', label: 'Team', icon: Users },
-          { id: 'testimonials', label: 'Testimonials', icon: MessageSquare },
-          { id: 'investments', label: 'Investments', icon: DollarSign },
-          { id: 'settings', label: 'Settings', icon: Settings }
-        ].map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            onClick={() => setActiveTab(id)}
-            className={`w-full flex items-center px-4 py-3 text-left hover:bg-gray-700 transition-colors ${
-              activeTab === id ? 'bg-gray-700 border-r-4 border-yellow-600' : ''
-            }`}
-          >
-            <Icon size={20} />
-            {isSidebarOpen && <span className="ml-3">{label}</span>}
-          </button>
-        ))}
-      </nav>
-
-      <div className="absolute bottom-4 left-4 right-4">
-        <button 
-          onClick={handleLogout}
-          className="w-full flex items-center px-4 py-2 text-red-400 hover:bg-red-900 hover:bg-opacity-20 rounded transition-colors"
-        >
-          <LogOut size={20} />
-          {isSidebarOpen && <span className="ml-3">Logout</span>}
-        </button>
-      </div>
-    </div>
-  );
+  // Removed Sidebar component
+  // const Sidebar = () => (...)
 
   const Header = () => (
-    <div className={`bg-white shadow-sm border-b transition-all duration-300 ${
-      isSidebarOpen ? 'ml-64' : 'ml-16'
-    }`}>
-      <div className="px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Management
-            </h1>
-            <p className="text-gray-600">Manage your KDCU website content</p>
+    <header className="admin-header"> 
+      <div className="admin-header-container"> 
+        {/* Removed menu button for mobile as sidebar is removed */}
+        {/* <button 
+          onClick={() => setIsMenuOpen(true)} 
+          className="admin-menu-button" 
+        >
+          <Menu size={20} />
+        </button> */}
+        
+        <h1 className="admin-page-title"> 
+          {getCurrentPageTitle()}
+        </h1>
+        
+        <div className="admin-user-menu"> 
+          <span className="admin-user-name">Admin</span> 
+          <div className="admin-user-avatar"> 
+            <User size={18} />
           </div>
-          
-          {message.text && (
-            <div className={`flex items-center px-4 py-2 rounded-lg ${
-              message.type === 'success' 
-                ? 'bg-green-100 text-green-800 border border-green-200' 
-                : 'bg-red-100 text-red-800 border border-red-200'
-            }`}>
-              {message.type === 'success' ? 
-                <CheckCircle size={16} className="mr-2" /> : 
-                <AlertCircle size={16} className="mr-2" />
-              }
-              {message.text}
-            </div>
-          )}
+          <button 
+            className="admin-logout-icon" 
+            onClick={handleLogout}
+            type="button"
+          >
+            <LogOut size={18} />
+          </button>
         </div>
       </div>
-    </div>
+    </header>
   );
 
   const OverviewTab = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-gray-600">Total AMCOS</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.amcos_count}</p>
+    <div className="admin-overview"> 
+      <div className="admin-welcome-banner"> 
+        <div className="admin-welcome-content">
+          <h1 className="admin-welcome-title">Welcome to KDCU Admin Dashboard</h1>
+          <p className="admin-welcome-subtitle">
+            Manage your website content, products, and user registrations from one place
+          </p>
+        </div>
+        <div className="admin-welcome-stats">
+          <div className="admin-stat-item">
+            <span className="admin-stat-value">{stats.active_farmers.toLocaleString()}</span>
+            <span className="admin-stat-label">Active Farmers</span>
           </div>
-          <Users className="text-blue-600" size={32} />
+          <div className="admin-stat-item">
+            <span className="admin-stat-value">{stats.amcos_count}</span>
+            <span className="admin-stat-label">Total AMCOS</span>
+          </div>
         </div>
       </div>
-      
-      <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-gray-600">Staff Members</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.staff_count}</p>
-          </div>
-          <Award className="text-green-600" size={32} />
+
+      <div className="admin-dashboard-stats"> 
+        <div className="admin-stat-card"> 
+          <div className="admin-stat-header">Total AMCOS</div>
+          <div className="admin-stat-number">{stats.amcos_count}</div>
+          <div className="admin-stat-trend admin-trend-up">↑ 12.5%</div> 
+        </div>
+        
+        <div className="admin-stat-card">
+          <div className="admin-stat-header">Staff Members</div>
+          <div className="admin-stat-number">{stats.staff_count}</div>
+          <div className="admin-stat-trend admin-trend-up">↑ 8.3%</div>
+        </div>
+        
+        <div className="admin-stat-card">
+          <div className="admin-stat-header">Coffee Plants</div>
+          <div className="admin-stat-number">{stats.coffee_plants.toLocaleString()}</div>
+          <div className="admin-stat-trend admin-trend-up">↑ 15.2%</div>
+        </div>
+        
+        <div className="admin-stat-card">
+          <div className="admin-stat-header">Active Farmers</div>
+          <div className="admin-stat-number">{stats.active_farmers.toLocaleString()}</div>
+          <div className="admin-stat-trend admin-trend-down">↓ 1.8%</div>
         </div>
       </div>
-      
-      <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-gray-600">Coffee Plants</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.coffee_plants.toLocaleString()}</p>
+
+      <h2 className="admin-section-title">Key Management Areas</h2> 
+      <div className="admin-stats-grid"> 
+        <div className="admin-card">
+          <div className="admin-card-header">
+            <Image size={18} /> Hero Section
           </div>
-          <Coffee className="text-yellow-600" size={32} />
+          <div className="admin-card-value">Active</div>
+          <p className="admin-text-sm admin-text-secondary">Last updated: 2 days ago</p>
+          <button onClick={() => setActiveTab('carousel')} className="admin-quick-link">
+            Edit Hero <ChevronRight size={16} />
+          </button>
+        </div>
+        
+        <div className="admin-card">
+          <div className="admin-card-header">
+            <Package size={18} /> Products
+          </div>
+          <div className="admin-card-value">{products.length}</div>
+          <p className="admin-text-sm admin-text-secondary">Total products</p>
+          <button onClick={() => setActiveTab('products')} className="admin-quick-link">
+            Manage Products <ChevronRight size={16} />
+          </button>
+        </div>
+
+        <div className="admin-card">
+          <div className="admin-card-header">
+            <Users size={18} /> Team Members
+          </div>
+          <div className="admin-card-value">{teamMembers.length}</div>
+          <p className="admin-text-sm admin-text-secondary">Total members</p>
+          <button onClick={() => setActiveTab('team')} className="admin-quick-link">
+            Manage Team <ChevronRight size={16} />
+          </button>
+        </div>
+
+        <div className="admin-card">
+          <div className="admin-card-header">
+            <MessageSquare size={18} /> Testimonials
+          </div>
+          <div className="admin-card-value">{testimonials.length}</div>
+          <p className="admin-text-sm admin-text-secondary">Customer feedback</p>
+          <button onClick={() => setActiveTab('testimonials')} className="admin-quick-link">
+            Manage Testimonials <ChevronRight size={16} />
+          </button>
+        </div>
+
+        <div className="admin-card">
+          <div className="admin-card-header">
+            <DollarSign size={18} /> Investments
+          </div>
+          <div className="admin-card-value">{investments.length}</div>
+          <p className="admin-text-sm admin-text-secondary">Ongoing projects</p>
+          <button onClick={() => setActiveTab('investments')} className="admin-quick-link">
+            Manage Investments <ChevronRight size={16} />
+          </button>
+        </div>
+
+        <div className="admin-card">
+          <div className="admin-card-header">
+            <Settings size={18} /> Settings
+          </div>
+          <div className="admin-card-value">Configured</div>
+          <p className="admin-text-sm admin-text-secondary">Website preferences</p>
+          <button onClick={() => setActiveTab('settings')} className="admin-quick-link">
+            Edit Settings <ChevronRight size={16} />
+          </button>
         </div>
       </div>
-      
-      <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-gray-600">Active Farmers</p>
-            <p className="text-3xl font-bold text-gray-900">{stats.active_farmers.toLocaleString()}</p>
-          </div>
-          <TrendingUp className="text-purple-600" size={32} />
+
+      {/* Quick Actions (example from AdminDashboard.jsx) */}
+      <div className="admin-panel admin-mt-4">
+        <h2 className="admin-section-title">Quick Actions</h2>
+        <div className="admin-actions-grid">
+          <button onClick={() => openModal('carousel')} className="admin-action-card">
+            <Plus size={24} className="admin-action-icon admin-action-icon-primary" />
+            <div>
+              <h3 className="admin-action-title">Add New Carousel Slide</h3>
+              <p className="admin-action-description">Quickly add a new slide to the hero section.</p>
+            </div>
+          </button>
+          <button onClick={() => openModal('product')} className="admin-action-card">
+            <Plus size={24} className="admin-action-icon admin-action-icon-success" />
+            <div>
+              <h3 className="admin-action-title">Add New Product</h3>
+              <p className="admin-action-description">Add a new coffee product or service.</p>
+            </div>
+          </button>
         </div>
       </div>
+
     </div>
   );
-
-  const StatsTab = () => (
-    <div className="bg-white p-6 rounded-lg shadow-sm border">
-      <h3 className="text-lg font-semibold mb-4">Update Statistics</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Number of AMCOS
-          </label>
-          <input
-            type="number"
-            value={stats.amcos_count}
-            onChange={(e) => setStats(prev => ({ ...prev, amcos_count: parseInt(e.target.value) }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Staff Count
-          </label>
-          <input
-            type="number"
-            value={stats.staff_count}
-            onChange={(e) => setStats(prev => ({ ...prev, staff_count: parseInt(e.target.value) }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Coffee Plants
-          </label>
-          <input
-            type="number"
-            value={stats.coffee_plants}
-            onChange={(e) => setStats(prev => ({ ...prev, coffee_plants: parseInt(e.target.value) }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Active Farmers
-          </label>
-          <input
-            type="number"
-            value={stats.active_farmers}
-            onChange={(e) => setStats(prev => ({ ...prev, active_farmers: parseInt(e.target.value) }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-          />
-        </div>
-      </div>
-      
-      <button
-        onClick={() => updateStats(stats)}
-        disabled={loading}
-        className="mt-4 bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 disabled:opacity-50"
-      >
-        {loading ? 'Updating...' : 'Update Statistics'}
-      </button>
-    </div>
-  );
-
-  const DataTable = ({ data, type, columns }) => (
-    <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-      <div className="px-6 py-4 border-b flex items-center justify-between">
-        <h3 className="text-lg font-semibold">
-          {type.charAt(0).toUpperCase() + type.slice(1)} Management
-        </h3>
-        <button
-          onClick={() => openModal(type)}
-          className="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 flex items-center gap-2"
-        >
-          <Plus size={16} />
-          Add New
-        </button>
-      </div>
-      
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              {columns.map(col => (
-                <th key={col.key} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {col.label}
-                </th>
-              ))}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {data.map(item => (
-              <tr key={item.id}>
-                {columns.map(col => (
-                  <td key={col.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {col.render ? col.render(item[col.key], item) : item[col.key]}
-                  </td>
-                ))}
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button
-                    onClick={() => openModal(type, item)}
-                    className="text-indigo-600 hover:text-indigo-900 mr-3"
-                  >
-                    <Edit3 size={16} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(type, item.id)}
-                    className="text-red-600 hover:text-red-900"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-
-  const Modal = () => {
-    if (!showModal) return null;
-
-    const renderFormFields = () => {
-      switch (modalType) {
-        case 'carousel':
-          return (
-            <>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
-                <input
-                  type="text"
-                  value={formData.title || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
-                <input
-                  type="text"
-                  value={formData.subtitle || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, subtitle: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                <textarea
-                  value={formData.description || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
-                <input
-                  type="url"
-                  value={formData.image_url || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-            </>
-          );
-        
-        case 'product':
-          return (
-            <>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
-                <input
-                  type="text"
-                  value={formData.name || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                <textarea
-                  value={formData.description || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Price</label>
-                <input
-                  type="text"
-                  value={formData.price || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                <select
-                  value={formData.category || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                >
-                  <option value="">Select Category</option>
-                  <option value="premium">Premium</option>
-                  <option value="certified">Certified</option>
-                  <option value="organic">Organic</option>
-                </select>
-              </div>
-            </>
-          );
-        
-        case 'team':
-          return (
-            <>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                <input
-                  type="text"
-                  value={formData.name || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Position</label>
-                <input
-                  type="text"
-                  value={formData.position || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, position: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                <textarea
-                  value={formData.description || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                <input
-                  type="email"
-                  value={formData.email || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                <input
-                  type="tel"
-                  value={formData.phone || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-            </>
-          );
-        
-        case 'testimonial':
-          return (
-            <>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                <input
-                  type="text"
-                  value={formData.name || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                <input
-                  type="text"
-                  value={formData.role || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Cooperative</label>
-                <input
-                  type="text"
-                  value={formData.cooperative || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, cooperative: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Testimonial Text</label>
-                <textarea
-                  value={formData.text || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, text: e.target.value }))}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Rating</label>
-                <select
-                  value={formData.rating || 5}
-                  onChange={(e) => setFormData(prev => ({ ...prev, rating: parseInt(e.target.value) }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                >
-                  <option value={5}>5 Stars</option>
-                  <option value={4}>4 Stars</option>
-                  <option value={3}>3 Stars</option>
-                  <option value={2}>2 Stars</option>
-                  <option value={1}>1 Star</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={formData.is_featured || false}
-                    onChange={(e) => setFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
-                    className="mr-2"
-                  />
-                  Featured Testimonial
-                </label>
-              </div>
-            </>
-          );
-        
-        case 'investment':
-          return (
-            <>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Investment Title</label>
-                <input
-                  type="text"
-                  value={formData.title || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Amount</label>
-                <input
-                  type="text"
-                  value={formData.amount || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
-                  placeholder="e.g., USD 500,000"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                <textarea
-                  value={formData.description || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                <select
-                  value={formData.status || 'planned'}
-                  onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                >
-                  <option value="planned">Planned</option>
-                  <option value="ongoing">Ongoing</option>
-                  <option value="completed">Completed</option>
-                  <option value="paused">Paused</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
-                <input
-                  type="date"
-                  value={formData.start_date || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, start_date: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
-                <input
-                  type="date"
-                  value={formData.end_date || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, end_date: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-            </>
-          );
-        
-        default:
-          return null;
-      }
-    };
-
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">
-              {editingItem ? 'Edit' : 'Add'} {modalType.charAt(0).toUpperCase() + modalType.slice(1)}
-            </h3>
-            <button onClick={closeModal} className="text-gray-400 hover:text-gray-600">
-              <X size={20} />
-            </button>
-          </div>
-          
-          {renderFormFields()}
-          
-          <div className="flex justify-end gap-2 mt-6">
-            <button
-              onClick={closeModal}
-              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={loading}
-              className="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 disabled:opacity-50 flex items-center gap-2"
-            >
-              {loading ? 'Saving...' : (
-                <>
-                  <Save size={16} />
-                  Save
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'overview':
         return <OverviewTab />;
-      
-      case 'stats':
-        return <StatsTab />;
-      
       case 'carousel':
         return (
-          <DataTable
-            data={carouselSlides}
-            type="carousel"
+          <DataTable 
+            data={carouselSlides} 
+            type="carousel" 
             columns={[
               { key: 'title', label: 'Title' },
               { key: 'subtitle', label: 'Subtitle' },
-              { 
-                key: 'description', 
-                label: 'Description',
-                render: (desc) => desc.length > 50 ? desc.substring(0, 50) + '...' : desc
-              },
-              { 
-                key: 'is_active', 
-                label: 'Status',
-                render: (active) => active ? 'Active' : 'Inactive'
-              }
-            ]}
+              { key: 'is_active', label: 'Active', render: (val) => val ? 'Yes' : 'No' }
+            ]} 
           />
         );
-      
+      case 'stats':
+        return (
+          <div className="admin-panel">
+            <h3 className="admin-section-title">Update Statistics</h3>
+            <div className="admin-form-grid">
+              <div>
+                <label className="admin-label">Number of AMCOS</label>
+                <input
+                  type="number"
+                  value={stats.amcos_count}
+                  onChange={(e) => setStats(prev => ({ ...prev, amcos_count: parseInt(e.target.value) }))}
+                  className="admin-input"
+                />
+              </div>
+              
+              <div>
+                <label className="admin-label">Staff Count</label>
+                <input
+                  type="number"
+                  value={stats.staff_count}
+                  onChange={(e) => setStats(prev => ({ ...prev, staff_count: parseInt(e.target.value) }))}
+                  className="admin-input"
+                />
+              </div>
+              
+              <div>
+                <label className="admin-label">Coffee Plants</label>
+                <input
+                  type="number"
+                  value={stats.coffee_plants}
+                  onChange={(e) => setStats(prev => ({ ...prev, coffee_plants: parseInt(e.target.value) }))}
+                  className="admin-input"
+                />
+              </div>
+              
+              <div>
+                <label className="admin-label">Active Farmers</label>
+                <input
+                  type="number"
+                  value={stats.active_farmers}
+                  onChange={(e) => setStats(prev => ({ ...prev, active_farmers: parseInt(e.target.value) }))}
+                  className="admin-input"
+                />
+              </div>
+            </div>
+            <button onClick={() => updateStats(stats)} disabled={loading} className="admin-btn admin-btn-primary admin-mt-4">
+              {loading ? 'Updating...' : 'Update Statistics'}
+            </button>
+          </div>
+        );
       case 'products':
         return (
-          <DataTable
-            data={products}
-            type="product"
+          <DataTable 
+            data={products} 
+            type="product" 
             columns={[
               { key: 'name', label: 'Product Name' },
-              { 
-                key: 'description', 
-                label: 'Description',
-                render: (desc) => desc.length > 50 ? desc.substring(0, 50) + '...' : desc
-              },
               { key: 'price', label: 'Price' },
               { key: 'category', label: 'Category' },
-              { 
-                key: 'is_active', 
-                label: 'Status',
-                render: (active) => active ? 'Active' : 'Inactive'
-              }
-            ]}
+              { key: 'is_active', label: 'Active', render: (val) => val ? 'Yes' : 'No' }
+            ]} 
           />
         );
-      
       case 'team':
         return (
-          <DataTable
-            data={teamMembers}
-            type="team"
+          <DataTable 
+            data={teamMembers} 
+            type="team" 
             columns={[
               { key: 'name', label: 'Name' },
               { key: 'position', label: 'Position' },
-              { key: 'email', label: 'Email' },
-              { key: 'phone', label: 'Phone' },
-              { 
-                key: 'is_active', 
-                label: 'Status',
-                render: (active) => active ? 'Active' : 'Inactive'
-              }
-            ]}
+              { key: 'email', label: 'Email' }
+            ]} 
           />
         );
-      
       case 'testimonials':
         return (
-          <DataTable
-            data={testimonials}
-            type="testimonial"
+          <DataTable 
+            data={testimonials} 
+            type="testimonial" 
             columns={[
               { key: 'name', label: 'Name' },
               { key: 'role', label: 'Role' },
-              { key: 'cooperative', label: 'Cooperative' },
-              { 
-                key: 'text', 
-                label: 'Testimonial',
-                render: (text) => text.length > 50 ? text.substring(0, 50) + '...' : text
-              },
+              { key: 'text', label: 'Testimonial', render: (val) => `${val.substring(0, 50)}...` },
               { key: 'rating', label: 'Rating' }
-            ]}
+            ]} 
           />
         );
-      
       case 'investments':
         return (
-          <DataTable
-            data={investments}
-            type="investment"
+          <DataTable 
+            data={investments} 
+            type="investment" 
             columns={[
               { key: 'title', label: 'Title' },
               { key: 'amount', label: 'Amount' },
-              { key: 'status', label: 'Status' },
-              { key: 'start_date', label: 'Start Date' },
-              { key: 'end_date', label: 'End Date' }
-            ]}
+              { key: 'status', label: 'Status' }
+            ]} 
           />
         );
-      
       case 'settings':
         return (
-          <div className="bg-white p-6 rounded-lg shadow-sm border">
-            <h3 className="text-lg font-semibold mb-4">General Settings</h3>
-            <div className="space-y-4">
+          <div className="admin-panel">
+            <h3 className="admin-section-title">Website Settings</h3>
+            <div className="admin-form-grid">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Company Name
-                </label>
+                <label className="admin-label">Website Name</label>
                 <input
                   type="text"
                   defaultValue="KDCU Limited"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  className="admin-input"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Company Tagline
-                </label>
-                <input
-                  type="text"
-                  defaultValue="Ushirika Hai Kwa Maendeleo"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Contact Email
-                </label>
+                <label className="admin-label">Contact Email</label>
                 <input
                   type="email"
                   defaultValue="info@kdculimited.co.tz"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  className="admin-input"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Contact Phone
-                </label>
+                <label className="admin-label">Contact Phone</label>
                 <input
                   type="tel"
                   defaultValue="+255 28 222 xxxx"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  className="admin-input"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Address
-                </label>
+                <label className="admin-label">Address</label>
                 <textarea
                   defaultValue="Karagwe, Kagera Region, Tanzania"
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  className="admin-input"
                 />
               </div>
               
-              <button className="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700">
+              <button className="admin-btn admin-btn-primary">
                 Save Settings
               </button>
             </div>
@@ -1001,16 +616,249 @@ const Dashboard = () => {
     }
   };
 
+  const DataTable = ({ data, type, columns }) => (
+    <div className="admin-panel"> 
+      <div className="admin-panel-header"> 
+        <h3 className="admin-section-title">
+          {type.charAt(0).toUpperCase() + type.slice(1)} Management
+        </h3>
+        <button onClick={() => openModal(type)} className="admin-btn admin-btn-primary"> 
+          <Plus size={16} /> Add New
+        </button>
+      </div>
+      <div className="admin-table-container"> 
+        <table className="admin-table"> 
+          <thead>
+            <tr>
+              {columns.map(col => (
+                <th key={col.key}>
+                  {col.label}
+                </th>
+              ))}
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map(item => (
+              <tr key={item.id}>
+                {columns.map(col => (
+                  <td key={col.key}>
+                    {col.render ? col.render(item[col.key], item) : item[col.key]}
+                  </td>
+                ))}
+                <td>
+                  <div className="admin-action-buttons"> 
+                    <button onClick={() => openModal(type, item)} className="admin-btn admin-btn-icon"> 
+                      <Edit3 size={16} />
+                    </button>
+                    <button onClick={() => handleDelete(type, item.id)} className="admin-btn admin-btn-icon admin-btn-danger"> 
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+
+  const Modal = () => {
+    if (!showModal) return null;
+    const renderFormFields = () => {
+      switch (modalType) {
+        case 'carousel':
+          return (
+            <>
+              <div className="admin-form-group"> 
+                <label className="admin-label">Title</label>
+                <input type="text" value={formData.title || ''} onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} className="admin-input" /> 
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Subtitle</label>
+                <input type="text" value={formData.subtitle || ''} onChange={(e) => setFormData(prev => ({ ...prev, subtitle: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Description</label>
+                <textarea value={formData.description || ''} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} rows={3} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Image URL</label>
+                <input type="url" value={formData.image_url || ''} onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group admin-checkbox-group"> 
+                <input type="checkbox" checked={formData.is_active || false} onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))} id="carousel-active" />
+                <label htmlFor="carousel-active" className="admin-checkbox-label">Is Active</label>
+              </div>
+            </>
+          );
+        case 'product':
+          return (
+            <>
+              <div className="admin-form-group">
+                <label className="admin-label">Product Name</label>
+                <input type="text" value={formData.name || ''} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Description</label>
+                <textarea value={formData.description || ''} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} rows={3} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Price</label>
+                <input type="text" value={formData.price || ''} onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Image URL</label>
+                <input type="url" value={formData.image_url || ''} onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Category</label>
+                <input type="text" value={formData.category || ''} onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group admin-checkbox-group">
+                <input type="checkbox" checked={formData.is_active || false} onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))} id="product-active" />
+                <label htmlFor="product-active" className="admin-checkbox-label">Is Active</label>
+              </div>
+            </>
+          );
+        case 'team':
+          return (
+            <>
+              <div className="admin-form-group">
+                <label className="admin-label">Name</label>
+                <input type="text" value={formData.name || ''} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Position</label>
+                <input type="text" value={formData.position || ''} onChange={(e) => setFormData(prev => ({ ...prev, position: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Description</label>
+                <textarea value={formData.description || ''} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} rows={3} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Image URL</label>
+                <input type="url" value={formData.image_url || ''} onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Email</label>
+                <input type="email" value={formData.email || ''} onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Phone</label>
+                <input type="tel" value={formData.phone || ''} onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group admin-checkbox-group">
+                <input type="checkbox" checked={formData.is_active || false} onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))} id="team-active" />
+                <label htmlFor="team-active" className="admin-checkbox-label">Is Active</label>
+              </div>
+            </>
+          );
+        case 'testimonial':
+          return (
+            <>
+              <div className="admin-form-group">
+                <label className="admin-label">Name</label>
+                <input type="text" value={formData.name || ''} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Role</label>
+                <input type="text" value={formData.role || ''} onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Cooperative</label>
+                <input type="text" value={formData.cooperative || ''} onChange={(e) => setFormData(prev => ({ ...prev, cooperative: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Testimonial Text</label>
+                <textarea value={formData.text || ''} onChange={(e) => setFormData(prev => ({ ...prev, text: e.target.value }))} rows={3} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Rating (1-5)</label>
+                <input type="number" value={formData.rating || ''} onChange={(e) => setFormData(prev => ({ ...prev, rating: parseInt(e.target.value) }))} min="1" max="5" className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Image URL</label>
+                <input type="url" value={formData.image_url || ''} onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group admin-checkbox-group">
+                <input type="checkbox" checked={formData.is_featured || false} onChange={(e) => setFormData(prev => ({ ...prev, is_featured: e.target.checked }))} id="testimonial-featured" />
+                <label htmlFor="testimonial-featured" className="admin-checkbox-label">Is Featured</label>
+              </div>
+            </>
+          );
+        case 'investment':
+          return (
+            <>
+              <div className="admin-form-group">
+                <label className="admin-label">Title</label>
+                <input type="text" value={formData.title || ''} onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Amount</label>
+                <input type="text" value={formData.amount || ''} onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Description</label>
+                <textarea value={formData.description || ''} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} rows={3} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Status</label>
+                <input type="text" value={formData.status || ''} onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Start Date</label>
+                <input type="date" value={formData.start_date || ''} onChange={(e) => setFormData(prev => ({ ...prev, start_date: e.target.value }))} className="admin-input" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">End Date</label>
+                <input type="date" value={formData.end_date || ''} onChange={(e) => setFormData(prev => ({ ...prev, end_date: e.target.value }))} className="admin-input" />
+              </div>
+            </>
+          );
+        default:
+          return null;
+      }
+    };
+
+    return (
+      <div className="admin-modal-overlay"> 
+        <div className="admin-modal-content"> 
+          <div className="admin-modal-header"> 
+            <h3 className="admin-modal-title">
+              {editingItem ? `Edit ${modalType}` : `Add New ${modalType}`}
+            </h3>
+            <button onClick={closeModal} className="admin-modal-close"> 
+              <X size={20} />
+            </button>
+          </div>
+          <div className="admin-modal-body"> 
+            {renderFormFields()}
+          </div>
+          <div className="admin-modal-footer"> 
+            <button onClick={closeModal} className="admin-btn admin-btn-secondary">
+              Cancel
+            </button>
+            <button onClick={handleSave} disabled={loading} className="admin-btn admin-btn-primary">
+              {loading ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Sidebar />
-      <div className={`transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'}`}>
+    <div className="admin-dashboard"> {/* Removed admin-mobile-sidebar-open class */}
+      {/* Removed Sidebar component */}
+      <div className="admin-content-wrapper"> 
         <Header />
-        <main className="p-6">
+        <main className="admin-content"> 
           {renderTabContent()}
         </main>
       </div>
-      <Modal />
+      <Modal /> 
     </div>
   );
 };

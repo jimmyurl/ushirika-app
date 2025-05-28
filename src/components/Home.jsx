@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Coffee, Users, Award, TrendingUp, Menu, X, ChevronLeft, ChevronRight, Star, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import '../Home.css';
-import logo from '../assets/kdlogo.png';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -122,50 +127,51 @@ const Home = () => {
     </div>
   );
 
-  const Header = () => (
-    <header className="header">
-      <div className="header-container">
-        <div className="header-content">
-          <div className="logo">
-            <div className="logo-icon">
-              <img src={logo} alt="KDCU Logo" style={{ height: '40px' }} /> {/* Updated logo */}
-            </div>
-            <div>
-              <h1 className="logo-text">KDCU Limited</h1>
-              <p className="logo-subtext">Cooperative Excellence</p>
-            </div>
-          </div>
+  // Removed Header component from Home.jsx
+  // const Header = () => (
+  //   <header className="header">
+  //     <div className="header-container">
+  //       <div className="header-content">
+  //         <div className="logo">
+  //           <div className="logo-icon">
+  //             <img src={logo} alt="KDCU Logo" style={{ height: '40px' }} />
+  //           </div>
+  //           <div>
+  //             <h1 className="logo-text">KDCU Limited</h1>
+  //             <p className="logo-subtext">Cooperative Excellence</p>
+  //           </div>
+  //         </div>
 
-          <nav className="nav">
-            <a href="/" className="nav-link">Home</a>
-            <a href="/about" className="nav-link">About</a>
-            <a href="/services" className="nav-link">Services</a>
-            <a href="/investments" className="nav-link">Investments</a>
-            <a href="/amcos" className="nav-link">AMCOS</a>
-            <a href="/contact" className="nav-link">Contact</a>
-          </nav>
+  //         <nav className="nav">
+  //           <a href="/" className="nav-link">Home</a>
+  //           <a href="/about" className="nav-link">About</a>
+  //           <a href="/services" className="nav-link">Services</a>
+  //           <a href="/investments" className="nav-link">Investments</a>
+  //           <a href="/amcos" className="nav-link">AMCOS</a>
+  //           <a href="/contact" className="nav-link">Contact</a>
+  //         </nav>
 
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="mobile-menu-button"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
+  //         <button
+  //           onClick={() => setIsMenuOpen(!isMenuOpen)}
+  //           className="mobile-menu-button"
+  //         >
+  //           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+  //         </button>
+  //       </div>
 
-        {isMenuOpen && (
-          <div className="mobile-nav">
-            <a href="/" className="mobile-nav-link">Home</a>
-            <a href="/about" className="mobile-nav-link">About</a>
-            <a href="/services" className="mobile-nav-link">Services</a>
-            <a href="/investments" className="mobile-nav-link">Investments</a>
-            <a href="/amcos" className="mobile-nav-link">AMCOS</a>
-            <a href="/contact" className="mobile-nav-link">Contact</a>
-          </div>
-        )}
-      </div>
-    </header>
-  );
+  //       {isMenuOpen && (
+  //         <div className="mobile-nav">
+  //           <a href="/" className="mobile-nav-link">Home</a>
+  //           <a href="/about" className="mobile-nav-link">About</a>
+  //           <a href="/services" className="mobile-nav-link">Services</a>
+  //           <a href="/investments" className="mobile-nav-link">Investments</a>
+  //           <a href="/amcos" className="mobile-nav-link">AMCOS</a>
+  //           <a href="/contact" className="mobile-nav-link">Contact</a>
+  //         </div>
+  //       )}
+  //     </div>
+  //   </header>
+  // );
 
   const CarouselSection = () => (
     <section id="carousel" className="carousel-container">
@@ -210,7 +216,7 @@ const Home = () => {
             Making a difference in the lives of coffee farmers across Kagera region
           </p>
         </div>
-        
+
         <div className="grid-3">
           <div className="card">
             <div className="card-icon">
@@ -221,7 +227,7 @@ const Home = () => {
               Member cooperatives united under our union
             </p>
           </div>
-          
+
           <div className="card">
             <div className="card-icon">
               <Award size={32} />
@@ -231,7 +237,7 @@ const Home = () => {
               Dedicated professionals working for our members
             </p>
           </div>
-          
+
           <div className="card">
             <div className="card-icon">
               <TrendingUp size={32} />
@@ -255,21 +261,21 @@ const Home = () => {
             Discover our range of premium coffee varieties, each carefully sourced from our member farmers
           </p>
         </div>
-        
+
         <div className="grid-3">
           {[
-            { 
-              name: "Premium Coffee", 
+            {
+              name: "Premium Coffee",
               description: "Premium Coffee is always fresh and our beans are locally roasted right here in Tanzania.",
               price: "1,300"
             },
-            { 
-              name: "4C Coffee Certification", 
+            {
+              name: "4C Coffee Certification",
               description: "4C certification applies high standards on economic, social and environmental conditions for coffee production and processing to establish sustainable practices.",
               price: "1,800"
             },
-            { 
-              name: "Organic Coffee", 
+            {
+              name: "Organic Coffee",
               description: "Organic coffee is coffee produced without the aid of artificial chemical substances, such as certain additives or some pesticides and herbicides.",
               price: "2,100"
             }
@@ -311,7 +317,7 @@ const Home = () => {
             Strategic investments in infrastructure and technology
           </p>
         </div>
-        
+
         <div className="grid-3">
           {investments.map((investment, index) => (
             <div key={index} className="card">
@@ -336,15 +342,15 @@ const Home = () => {
             Experienced professionals dedicated to cooperative success
           </p>
         </div>
-        
+
         <div className="grid-3">
           {teamMembers.map((member, index) => (
             <div key={index} className="card">
               <div className="team-avatar" style={{
-                width: '80px', 
-                height: '80px', 
-                borderRadius: '50%', 
-                backgroundColor: '#92400e', 
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                backgroundColor: '#92400e',
                 margin: '0 auto 1rem',
                 display: 'flex',
                 alignItems: 'center',
@@ -376,7 +382,7 @@ const Home = () => {
             Hear from our valued cooperative members
           </p>
         </div>
-        
+
         <div className="grid-3">
           {testimonials.map((testimonial, index) => (
             <div key={index} className="card-white">
@@ -399,89 +405,20 @@ const Home = () => {
     </section>
   );
 
-  const Footer = () => (
-    <footer style={{backgroundColor: '#1f2937', color: 'white', padding: '3rem 0 1rem'}}>
-      <div className="container">
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem', marginBottom: '2rem'}}>
-          <div>
-            <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
-              <Coffee size={32} color="#92400e" style={{marginRight: '0.5rem'}} />
-              <div>
-                <h3 style={{margin: '0', fontSize: '1.5rem'}}>KDCU Limited</h3>
-                <p style={{margin: '0', color: '#9ca3af'}}>Cooperative Excellence</p>
-              </div>
-            </div>
-            <p style={{color: '#9ca3af', lineHeight: '1.6'}}>
-              Karagwe District Co-operative Union Ltd - Empowering small-scale coffee growers 
-              in the Kagera region of Tanzania since establishment.
-            </p>
-          </div>
-          
-          <div>
-            <h4 style={{marginBottom: '1rem', color: '#92400e'}}>Quick Links</h4>
-            <ul style={{listStyle: 'none', padding: '0', margin: '0'}}>
-              <li style={{marginBottom: '0.5rem'}}>
-                <a href="/" style={{color: '#9ca3af', textDecoration: 'none'}}>Home</a>
-              </li>
-              <li style={{marginBottom: '0.5rem'}}>
-                <a href="/about" style={{color: '#9ca3af', textDecoration: 'none'}}>About Us</a>
-              </li>
-              <li style={{marginBottom: '0.5rem'}}>
-                <a href="/services" style={{color: '#9ca3af', textDecoration: 'none'}}>Services</a>
-              </li>
-              <li style={{marginBottom: '0.5rem'}}>
-                <a href="/contact" style={{color: '#9ca3af', textDecoration: 'none'}}>Contact</a>
-              </li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 style={{marginBottom: '1rem', color: '#92400e'}}>Contact Info</h4>
-            <div style={{display: 'flex', alignItems: 'center', marginBottom: '0.5rem'}}>
-              <MapPin size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
-              <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>Karagwe, Kagera Region, Tanzania</span>
-            </div>
-            <div style={{display: 'flex', alignItems: 'center', marginBottom: '0.5rem'}}>
-              <Phone size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
-              <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>+255 28 222 xxxx</span>
-            </div>
-            <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
-              <Mail size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
-              <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>info@kdculimited.co.tz</span>
-            </div>
-            
-            <div style={{display: 'flex', gap: '1rem'}}>
-              <Facebook size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-              <Twitter size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-              <Instagram size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-              <Linkedin size={20} style={{color: '#9ca3af', cursor: 'pointer'}} />
-            </div>
-          </div>
-        </div>
-        
-        <div style={{borderTop: '1px solid #374151', paddingTop: '1rem', textAlign: 'center'}}>
-          <p style={{margin: '0', color: '#9ca3af', fontSize: '0.9rem'}}>
-            © 2024 KDCU Limited. All rights reserved. | Ushirika Hai Kwa Maendeleo
-          </p>
-        </div>
-      </div>
-    </footer>
-  );
-
   if (loading) {
     return <Spinner />;
   }
 
   return (
     <div className="App">
-      <Header />
+      {/* <Header />  Removed */}
       <CarouselSection />
       <StatsSection />
       <ProductsSection />
       <InvestmentsSection />
       <TeamSection />
       <TestimonialsSection />
-      <Footer />
+      {/* <Footer /> Removed */}
     </div>
   );
 };
