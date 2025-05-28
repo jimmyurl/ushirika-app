@@ -361,7 +361,7 @@ const Dashboard = () => {
   );
 
   const OverviewTab = () => (
-    <div className="admin-overview">
+    <div className="admin-panel"> {/* ADD THIS WRAPPER */}
       <div className="admin-welcome-banner">
         <div className="admin-welcome-content">
           <h1 className="admin-welcome-title">Welcome to KDCU Admin Dashboard</h1>
@@ -380,7 +380,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
+  
       <div className="admin-dashboard-stats">
         <div className="admin-stat-card">
           <div className="admin-stat-header">Total AMCOS</div>
@@ -500,12 +500,16 @@ const Dashboard = () => {
     </div>
   );
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'overview':
-        return <OverviewTab />;
-      case 'carousel':
-        return (
+// In your renderTabContent() function, replace the return statements with these fixed versions:
+
+const renderTabContent = () => {
+  switch (activeTab) {
+    case 'overview':
+      return <OverviewTab />;
+      
+    case 'carousel':
+      return (
+        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
           <DataTable
             data={carouselSlides}
             type="carousel"
@@ -515,59 +519,63 @@ const Dashboard = () => {
               { key: 'is_active', label: 'Active', render: (val) => val ? 'Yes' : 'No' }
             ]}
           />
-        );
-      case 'stats':
-        return (
-          <div className="admin-panel">
-            <h3 className="admin-section-title">Update Statistics</h3>
-            <div className="admin-form-grid">
-              <div>
-                <label className="admin-label">Number of AMCOS</label>
-                <input
-                  type="number"
-                  value={stats.amcos_count}
-                  onChange={(e) => setStats(prev => ({ ...prev, amcos_count: parseInt(e.target.value) }))}
-                  className="admin-input"
-                />
-              </div>
-
-              <div>
-                <label className="admin-label">Staff Count</label>
-                <input
-                  type="number"
-                  value={stats.staff_count}
-                  onChange={(e) => setStats(prev => ({ ...prev, staff_count: parseInt(e.target.value) }))}
-                  className="admin-input"
-                />
-              </div>
-
-              <div>
-                <label className="admin-label">Coffee Plants</label>
-                <input
-                  type="number"
-                  value={stats.coffee_plants}
-                  onChange={(e) => setStats(prev => ({ ...prev, coffee_plants: parseInt(e.target.value) }))}
-                  className="admin-input"
-                />
-              </div>
-
-              <div>
-                <label className="admin-label">Active Farmers</label>
-                <input
-                  type="number"
-                  value={stats.active_farmers}
-                  onChange={(e) => setStats(prev => ({ ...prev, active_farmers: parseInt(e.target.value) }))}
-                  className="admin-input"
-                />
-              </div>
+        </div>
+      );
+      
+    case 'stats':
+      return (
+        <div className="admin-panel">
+          <h3 className="admin-section-title">Update Statistics</h3>
+          <div className="admin-form-grid">
+            <div>
+              <label className="admin-label">Number of AMCOS</label>
+              <input
+                type="number"
+                value={stats.amcos_count}
+                onChange={(e) => setStats(prev => ({ ...prev, amcos_count: parseInt(e.target.value) }))}
+                className="admin-input"
+              />
             </div>
-            <button onClick={() => updateStats(stats)} disabled={loading} className="admin-btn admin-btn-primary admin-mt-4">
-              {loading ? 'Updating...' : 'Update Statistics'}
-            </button>
+
+            <div>
+              <label className="admin-label">Staff Count</label>
+              <input
+                type="number"
+                value={stats.staff_count}
+                onChange={(e) => setStats(prev => ({ ...prev, staff_count: parseInt(e.target.value) }))}
+                className="admin-input"
+              />
+            </div>
+
+            <div>
+              <label className="admin-label">Coffee Plants</label>
+              <input
+                type="number"
+                value={stats.coffee_plants}
+                onChange={(e) => setStats(prev => ({ ...prev, coffee_plants: parseInt(e.target.value) }))}
+                className="admin-input"
+              />
+            </div>
+
+            <div>
+              <label className="admin-label">Active Farmers</label>
+              <input
+                type="number"
+                value={stats.active_farmers}
+                onChange={(e) => setStats(prev => ({ ...prev, active_farmers: parseInt(e.target.value) }))}
+                className="admin-input"
+              />
+            </div>
           </div>
-        );
-      case 'products':
-        return (
+          <button onClick={() => updateStats(stats)} disabled={loading} className="admin-btn admin-btn-primary admin-mt-4">
+            {loading ? 'Updating...' : 'Update Statistics'}
+          </button>
+        </div>
+      );
+      
+    case 'products':
+      return (
+        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
           <DataTable
             data={products}
             type="product"
@@ -578,9 +586,12 @@ const Dashboard = () => {
               { key: 'is_active', label: 'Active', render: (val) => val ? 'Yes' : 'No' }
             ]}
           />
-        );
-      case 'team':
-        return (
+        </div>
+      );
+      
+    case 'team':
+      return (
+        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
           <DataTable
             data={teamMembers}
             type="team"
@@ -590,9 +601,12 @@ const Dashboard = () => {
               { key: 'email', label: 'Email' }
             ]}
           />
-        );
-      case 'testimonials':
-        return (
+        </div>
+      );
+      
+    case 'testimonials':
+      return (
+        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
           <DataTable
             data={testimonials}
             type="testimonial"
@@ -603,9 +617,12 @@ const Dashboard = () => {
               { key: 'rating', label: 'Rating' }
             ]}
           />
-        );
-      case 'investments':
-        return (
+        </div>
+      );
+      
+    case 'investments':
+      return (
+        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
           <DataTable
             data={investments}
             type="investment"
@@ -615,107 +632,115 @@ const Dashboard = () => {
               { key: 'status', label: 'Status' }
             ]}
           />
-        );
-      case 'settings':
-        return (
-          <div className="admin-panel">
-            <h3 className="admin-section-title">Website Settings</h3>
-            <div className="admin-form-grid">
-              <div>
-                <label className="admin-label">Website Name</label>
-                <input
-                  type="text"
-                  defaultValue="KDCU Limited"
-                  className="admin-input"
-                />
-              </div>
-
-              <div>
-                <label className="admin-label">Contact Email</label>
-                <input
-                  type="email"
-                  defaultValue="info@kdculimited.co.tz"
-                  className="admin-input"
-                />
-              </div>
-
-              <div>
-                <label className="admin-label">Contact Phone</label>
-                <input
-                  type="tel"
-                  defaultValue="+255 28 222 xxxx"
-                  className="admin-input"
-                />
-              </div>
-
-              <div>
-                <label className="admin-label">Address</label>
-                <textarea
-                  defaultValue="Karagwe, Kagera Region, Tanzania"
-                  rows={3}
-                  className="admin-input"
-                />
-              </div>
-
-              <button className="admin-btn admin-btn-primary">
-                Save Settings
-              </button>
+        </div>
+      );
+      
+    case 'settings':
+      return (
+        <div className="admin-panel">
+          <h3 className="admin-section-title">Website Settings</h3>
+          <div className="admin-form-grid">
+            <div>
+              <label className="admin-label">Website Name</label>
+              <input
+                type="text"
+                defaultValue="KDCU Limited"
+                className="admin-input"
+              />
             </div>
+
+            <div>
+              <label className="admin-label">Contact Email</label>
+              <input
+                type="email"
+                defaultValue="info@kdculimited.co.tz"
+                className="admin-input"
+              />
+            </div>
+
+            <div>
+              <label className="admin-label">Contact Phone</label>
+              <input
+                type="tel"
+                defaultValue="+255 28 222 xxxx"
+                className="admin-input"
+              />
+            </div>
+
+            <div>
+              <label className="admin-label">Address</label>
+              <textarea
+                defaultValue="Karagwe, Kagera Region, Tanzania"
+                rows={3}
+                className="admin-input"
+              />
+            </div>
+
+            <button className="admin-btn admin-btn-primary">
+              Save Settings
+            </button>
           </div>
-        );
+        </div>
+      );
 
-      default:
-        return <div>Select a tab to manage content</div>;
-    }
-  };
+    default:
+      return (
+        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
+          <div>Select a tab to manage content</div>
+        </div>
+      );
+  }
+};
 
-  const DataTable = ({ data, type, columns }) => (
-    <div className="admin-panel">
-      <div className="admin-panel-header">
-        <h3 className="admin-section-title">
-          {type.charAt(0).toUpperCase() + type.slice(1)} Management
-        </h3>
-        <button onClick={() => openModal(type)} className="admin-btn admin-btn-primary">
-          <Plus size={16} /> Add New
-        </button>
-      </div>
-      <div className="admin-table-container">
-        <table className="admin-table">
-          <thead>
-            <tr>
-              {columns.map(col => (
-                <th key={col.key}>
-                  {col.label}
-                </th>
-              ))}
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map(item => (
-              <tr key={item.id}>
-                {columns.map(col => (
-                  <td key={col.key}>
-                    {col.render ? col.render(item[col.key], item) : item[col.key]}
-                  </td>
-                ))}
-                <td>
-                  <div className="admin-action-buttons">
-                    <button onClick={() => openModal(type, item)} className="admin-btn admin-btn-icon">
-                      <Edit3 size={16} />
-                    </button>
-                    <button onClick={() => handleDelete(type, item.id)} className="admin-btn admin-btn-icon admin-btn-danger">
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+// ALSO UPDATE YOUR DataTable COMPONENT TO REMOVE DUPLICATE admin-panel WRAPPER:
+
+const DataTable = ({ data, type, columns }) => (
+  <> {/* Remove the admin-panel wrapper from here since we're adding it in renderTabContent */}
+    <div className="admin-panel-header">
+      <h3 className="admin-section-title">
+        {type.charAt(0).toUpperCase() + type.slice(1)} Management
+      </h3>
+      <button onClick={() => openModal(type)} className="admin-btn admin-btn-primary">
+        <Plus size={16} /> Add New
+      </button>
     </div>
-  );
+    <div className="admin-table-container">
+      <table className="admin-table">
+        <thead>
+          <tr>
+            {columns.map(col => (
+              <th key={col.key}>
+                {col.label}
+              </th>
+            ))}
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map(item => (
+            <tr key={item.id}>
+              {columns.map(col => (
+                <td key={col.key}>
+                  {col.render ? col.render(item[col.key], item) : item[col.key]}
+                </td>
+              ))}
+              <td>
+                <div className="admin-action-buttons">
+                  <button onClick={() => openModal(type, item)} className="admin-btn admin-btn-icon">
+                    <Edit3 size={16} />
+                  </button>
+                  <button onClick={() => handleDelete(type, item.id)} className="admin-btn admin-btn-icon admin-btn-danger">
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </>
+);
 
   const Modal = () => {
     if (!showModal) return null;
