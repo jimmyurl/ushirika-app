@@ -21,7 +21,7 @@ const Header = () => {
             </div>
             <div>
               <h1 className="logo-text">KDCU Limited</h1>
-              <p className="logo-subtext">Cooperative Excellence</p>
+              <p className="logo-subtext">Ushirika Hai Kwa Maendeleo</p>
             </div>
           </Link>
 

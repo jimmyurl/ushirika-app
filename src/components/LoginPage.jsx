@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Coffee, Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -8,37 +8,70 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [loginSuccess, setLoginSuccess] = useState(false);
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    
+    console.log('Login attempt:', { email, password }); // Debug log
 
     try {
-      // Simulate API call - replace with actual Supabase auth
+      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // For demo purposes, use hardcoded credentials
-      // In production, this should be handled by Supabase Auth
-      if (email === 'admin@kdculimited.co.tz' && password === 'admin123') {
-        // Store auth token (in production, use proper JWT handling)
-        localStorage.setItem('kdcu_admin_token', 'demo_token_' + Date.now());
-        localStorage.setItem('kdcu_admin_user', JSON.stringify({
+      // Check credentials (case-insensitive email comparison)
+      if (email.toLowerCase().trim() === 'admin@kdculimited.co.tz' && password === 'admin123') {
+        // Store auth data
+        const authToken = 'demo_token_' + Date.now();
+        const userData = {
           id: 1,
-          email: email,
+          email: email.toLowerCase().trim(),
           name: 'Admin User',
           role: 'admin'
-        }));
-        navigate('/dashboard');
+        };
+        
+        console.log('Login successful, storing data:', { authToken, userData }); // Debug log
+        
+        // Store auth data in localStorage for ProtectedRoute to pick up
+        localStorage.setItem('authToken', authToken); // Use 'authToken' key
+        localStorage.setItem('user', JSON.stringify(userData)); // Use 'user' key
+
+        setLoginSuccess(true);
+        setError('');
+        
+        // Redirect to the dashboard
+        navigate('/dashboard'); // Perform navigation
+        
       } else {
-        setError('Invalid email or password');
+        console.log('Login failed - invalid credentials'); // Debug log
+        setError('Invalid email or password. Please check your credentials.');
       }
     } catch (err) {
+      console.error('Login error:', err); // Debug log
       setError('Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Function to clear stored data (for testing)
+  const clearStoredData = () => {
+    setLoginSuccess(false);
+    setEmail('');
+    setPassword('');
+    setError('');
+    console.log('Form data cleared');
+  };
+
+  // Function to auto-fill demo credentials
+  const fillDemoCredentials = () => {
+    setEmail('admin@kdculimited.co.tz');
+    setPassword('admin123');
+    setError('');
   };
 
   return (
@@ -89,6 +122,24 @@ const LoginPage = () => {
           </p>
         </div>
 
+        {/* Success Message */}
+        {loginSuccess && (
+          <div style={{
+            backgroundColor: '#f0fdf4',
+            border: '1px solid #86efac',
+            borderRadius: '0.5rem',
+            padding: '0.75rem',
+            marginBottom: '1rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}>
+            <span style={{color: '#15803d', fontSize: '0.9rem'}}>
+              ✓ Login successful! Check console for debug info.
+            </span>
+          </div>
+        )}
+
         {/* Error Message */}
         {error && (
           <div style={{
@@ -107,7 +158,7 @@ const LoginPage = () => {
         )}
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit}>
+        <div>
           <div style={{marginBottom: '1.5rem'}}>
             <label style={{
               display: 'block',
@@ -124,7 +175,8 @@ const LoginPage = () => {
                 left: '1rem',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                color: '#9ca3af'
+                color: '#9ca3af',
+                pointerEvents: 'none'
               }}>
                 <Mail size={16} />
               </div>
@@ -166,7 +218,8 @@ const LoginPage = () => {
                 left: '1rem',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                color: '#9ca3af'
+                color: '#9ca3af',
+                pointerEvents: 'none'
               }}>
                 <Lock size={16} />
               </div>
@@ -188,6 +241,11 @@ const LoginPage = () => {
                 }}
                 onFocus={(e) => e.target.style.borderColor = '#92400e'}
                 onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSubmit(e);
+                  }
+                }}
               />
               <button
                 type="button"
@@ -201,7 +259,7 @@ const LoginPage = () => {
                   border: 'none',
                   color: '#9ca3af',
                   cursor: 'pointer',
-                  padding: '0'
+                  padding: '4px'
                 }}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -210,7 +268,7 @@ const LoginPage = () => {
           </div>
 
           <button
-            type="submit"
+            onClick={handleSubmit}
             disabled={loading}
             style={{
               width: '100%',
@@ -230,7 +288,7 @@ const LoginPage = () => {
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
-        </form>
+        </div>
 
         {/* Demo Credentials */}
         <div style={{
@@ -251,12 +309,44 @@ const LoginPage = () => {
           <p style={{
             fontSize: '0.8rem',
             color: '#374151',
-            margin: '0',
+            margin: '0 0 1rem 0',
             fontFamily: 'monospace'
           }}>
             Email: admin@kdculimited.co.tz<br />
             Password: admin123
           </p>
+          
+          {/* Debug buttons */}
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button
+              onClick={fillDemoCredentials}
+              style={{
+                fontSize: '0.7rem',
+                padding: '0.25rem 0.5rem',
+                backgroundColor: '#3b82f6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '0.25rem',
+                cursor: 'pointer'
+              }}
+            >
+              Auto-Fill
+            </button>
+            <button
+              onClick={clearStoredData}
+              style={{
+                fontSize: '0.7rem',
+                padding: '0.25rem 0.5rem',
+                backgroundColor: '#ef4444',
+                color: 'white',
+                border: 'none',
+                borderRadius: '0.25rem',
+                cursor: 'pointer'
+              }}
+            >
+              Clear Form
+            </button>
+          </div>
         </div>
       </div>
     </div>
