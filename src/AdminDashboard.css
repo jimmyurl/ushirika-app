@@ -16,7 +16,7 @@
   --admin-bg: #f9fafb;
   --admin-card-bg: #ffffff;
   --admin-sidebar-width: 250px;
-  --admin-header-height: 64px; /* Define header height */
+  --admin-header-height: 66px; /* Increased to account for padding + border */
   --admin-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
@@ -52,9 +52,9 @@
   flex-direction: column;
   position: fixed;
   left: 0;
-  top: var(--admin-header-height); /* Start below header on desktop */
+  top: calc(var(--admin-header-height) + 1px); /* Add 1px for header border */
   bottom: 0;
-  height: calc(100vh - var(--admin-header-height)); /* Adjust height to not overlap header */
+  height: calc(100vh - var(--admin-header-height) - 1px); /* Subtract border height */
   z-index: 90; /* Sidebar is above content but below header */
   transition: transform 0.3s ease, top 0.3s ease; /* Add top to transition */
 }
@@ -164,7 +164,7 @@
   left: 0; /* Ensure it starts from the left edge */
   right: 0; /* Ensure it spans to the right edge */
   z-index: 100; /* Highest z-index */
-  height: var(--admin-header-height); /* Explicitly set height */
+  min-height: var(--admin-header-height); /* Use min-height instead of height */
   box-sizing: border-box; /* Include padding in height */
 }
 
@@ -887,8 +887,8 @@
   .admin-sidebar {
     transform: translateX(-100%);
     /* On mobile, sidebar starts below the header */
-    top: var(--admin-header-height);
-    height: calc(100vh - var(--admin-header-height)); /* Adjust height */
+    top: calc(var(--admin-header-height) + 1px);
+    height: calc(100vh - var(--admin-header-height) - 1px); /* Adjust height */
   }
 
   .admin-dashboard.admin-mobile-sidebar-open .admin-sidebar {
