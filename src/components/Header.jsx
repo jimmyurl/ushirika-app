@@ -41,6 +41,9 @@ const Header = () => {
             <Link to="/amcos" className={`nav-link ${isActive('/amcos') ? 'active' : ''}`}>
               AMCOS
             </Link>
+            <Link to="/media" className={`nav-link ${isActive('/media') ? 'active' : ''}`}>
+              Media
+            </Link>
             <Link to="/contact" className={`nav-link ${isActive('/contact') ? 'active' : ''}`}>
               Contact
             </Link>
@@ -70,6 +73,9 @@ const Header = () => {
             </Link>
             <Link to="/amcos" className={`mobile-nav-link ${isActive('/amcos') ? 'active' : ''}`}>
               AMCOS
+            </Link>
+            <Link to="/media" className={`mobile-nav-link ${isActive('/media') ? 'active' : ''}`}>
+              Media
             </Link>
             <Link to="/contact" className={`mobile-nav-link ${isActive('/contact') ? 'active' : ''}`}>
               Contact
