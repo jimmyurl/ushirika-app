@@ -6,17 +6,94 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-
 const Contact = () => {
   return (
     <div className="page-container">
-      {/* Contact Hero Section */}
-      <section className="contact-hero">
-        <div className="hero-container">
-          <h1 className="hero-title">Contact Us</h1>
-          <p className="hero-description">
-            Get in touch with us for more information about our services and cooperative opportunities
+      {/* Contact Hero Section - Updated to match About page style */}
+      <section style={{
+        background: 'linear-gradient(135deg, #FEA116 0%, #e4950f 100%)',
+        color: 'white',
+        padding: '5rem 0',
+        textAlign: 'center'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
+          <h1 style={{
+            fontSize: '3rem',
+            fontWeight: 'bold',
+            marginBottom: '1rem',
+            lineHeight: '1.2'
+          }}>
+            Contact Us
+            <span style={{
+              display: 'block',
+              fontSize: '1.5rem',
+              fontWeight: '400',
+              marginTop: '0.5rem',
+              color: 'rgba(255,255,255,0.9)'
+            }}>
+              "Ushirika Hai Kwa Maendeleo"
+            </span>
+          </h1>
+          <p style={{
+            fontSize: '1.1rem',
+            maxWidth: '800px',
+            margin: '0 auto 2rem',
+            color: 'rgba(255,255,255,0.9)',
+            lineHeight: '1.6'
+          }}>
+            Get in touch with us for more information about our services and cooperative opportunities. We're here to help and would love to hear from you.
           </p>
+          <div style={{
+            display: 'flex',
+            gap: '1rem',
+            justifyContent: 'center',
+            flexWrap: 'wrap'
+          }}>
+            <button style={{
+              backgroundColor: 'white',
+              color: '#FEA116',
+              padding: '1rem 2rem',
+              borderRadius: '8px',
+              border: 'none',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = '#f3f4f6';
+              e.target.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = 'white';
+              e.target.style.transform = 'translateY(0)';
+            }}
+            >
+              Send Message
+            </button>
+            <button style={{
+              backgroundColor: 'transparent',
+              color: 'white',
+              padding: '1rem 2rem',
+              borderRadius: '8px',
+              border: '2px solid white',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = 'white';
+              e.target.style.color = '#FEA116';
+              e.target.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = 'transparent';
+              e.target.style.color = 'white';
+              e.target.style.transform = 'translateY(0)';
+            }}
+            >
+              Call Us Now
+            </button>
+          </div>
         </div>
       </section>
 
@@ -38,7 +115,7 @@ const Contact = () => {
                 </div>
                 <div className="contact-details">
                   <h3>Address</h3>
-                  <p>Kayanga, Karagwe District<br />Kagera Region, Tanzania</p>
+                  <p>Karagwe District Cooperative Union Limited, 398 Bugene Road,</p><p> P.O. Box 14, 35402<br />Karagwe Kagera Region, Tanzania.</p>
                 </div>
               </div>
               
@@ -48,7 +125,7 @@ const Contact = () => {
                 </div>
                 <div className="contact-details">
                   <h3>Phone</h3>
-                  <p>+255 123 456 789</p>
+                  <p>+255 28 222 7105</p>
                 </div>
               </div>
               
@@ -58,7 +135,7 @@ const Contact = () => {
                 </div>
                 <div className="contact-details">
                   <h3>Email</h3>
-                  <p>info@kdculimited.co.tz</p>
+                  <p>info@kdcu.co.tz</p>
                 </div>
               </div>
             </div>

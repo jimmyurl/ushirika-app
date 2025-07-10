@@ -32,8 +32,8 @@ const Header = () => {
             <Link to="/about" className={`nav-link ${isActive('/about') ? 'active' : ''}`}>
               About
             </Link>
-            <Link to="/services" className={`nav-link ${isActive('/services') ? 'active' : ''}`}>
-              Services
+            <Link to="/events" className={`nav-link ${isActive('/events') ? 'active' : ''}`}>
+              Events
             </Link>
             <Link to="/investments" className={`nav-link ${isActive('/investments') ? 'active' : ''}`}>
               Investments
@@ -62,8 +62,8 @@ const Header = () => {
             <Link to="/about" className={`mobile-nav-link ${isActive('/about') ? 'active' : ''}`}>
               About
             </Link>
-            <Link to="/services" className={`mobile-nav-link ${isActive('/services') ? 'active' : ''}`}>
-              Services
+            <Link to="/events" className={`mobile-nav-link ${isActive('/events') ? 'active' : ''}`}>
+              Events
             </Link>
             <Link to="/investments" className={`mobile-nav-link ${isActive('/investments') ? 'active' : ''}`}>
               Investments

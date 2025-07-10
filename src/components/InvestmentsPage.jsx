@@ -5,47 +5,42 @@ import '../Home.css';
 const InvestmentsPage = () => {
   const investments = [
     {
-      title: "Coffee Mill Expansion",
-      amount: "USD 500,000",
-      description: "Upgrading processing capacity to handle increased production from member cooperatives."
+      title: "Kamahungu Factory",
+      amount: "USD 750,000",
+      description: "State-of-the-art coffee processing facility designed to handle premium coffee production with modern wet processing technology."
     },
     {
-      title: "Quality Laboratory",
-      amount: "USD 150,000",
-      description: "Modern quality testing equipment to ensure coffee meets international standards."
+      title: "Coffee Tree Hotel",
+      amount: "USD 1,200,000",
+      description: "Hospitality venture showcasing our coffee heritage while providing quality accommodation and promoting coffee tourism."
     },
     {
-      title: "Farmer Training Centers",
-      amount: "USD 200,000",
-      description: "Establishing regional training facilities for continuous farmer education."
+      title: "Nyaishozi Secondary School",
+      amount: "USD 400,000",
+      description: "Educational investment supporting community development and ensuring quality education for the next generation."
     },
     {
-      title: "Warehouse Facilities",
-      amount: "USD 350,000",
-      description: "Expanding storage capacity to maintain coffee quality throughout the year."
+      title: "Blue Effort Company Limited",
+      amount: "USD 300,000",
+      description: "Strategic business partnership focused on expanding our commercial reach and diversifying our cooperative portfolio."
     },
     {
-      title: "Transportation Fleet",
-      amount: "USD 250,000",
-      description: "Investing in reliable transportation for efficient coffee collection and delivery."
-    },
-    {
-      title: "Solar Drying Systems",
-      amount: "USD 180,000",
-      description: "Implementing sustainable drying solutions to reduce energy costs."
+      title: "KDCU 94.5MHz FM Radio",
+      amount: "USD 85,000",
+      description: "Community radio station providing agricultural information, market updates, and educational content to our members."
     }
   ];
 
   const stats = [
     {
       icon: <TrendingUp size={32} />,
-      value: "USD 1.63M",
+      value: "USD 2.74M",
       label: "Total Investments"
     },
     {
       icon: <Award size={32} />,
-      value: "6 Projects",
-      label: "Completed"
+      value: "5 Projects",
+      label: "Active"
     },
     {
       icon: <Users size={32} />,
@@ -64,12 +59,90 @@ const InvestmentsPage = () => {
       {/* Removed the Header component definition from here */}
 
       <main>
-        {/* Hero Section */}
-        <section className="hero-section" style={{ backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(/coffee-field.jpg)' }}>
-          <div className="container">
-            <div className="hero-content">
-              <h1>Our Strategic Investments</h1>
-              <p className="hero-subtitle">Building sustainable infrastructure for cooperative growth</p>
+        {/* Hero Section - Updated to match About and Contact pages style */}
+        <section style={{
+          background: 'linear-gradient(135deg, #FEA116 0%, #e4950f 100%)',
+          color: 'white',
+          padding: '5rem 0',
+          textAlign: 'center'
+        }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
+            <h1 style={{
+              fontSize: '3rem',
+              fontWeight: 'bold',
+              marginBottom: '1rem',
+              lineHeight: '1.2'
+            }}>
+              Our Strategic Investments
+              <span style={{
+                display: 'block',
+                fontSize: '1.5rem',
+                fontWeight: '400',
+                marginTop: '0.5rem',
+                color: 'rgba(255,255,255,0.9)'
+              }}>
+                "Ushirika Hai Kwa Maendeleo"
+              </span>
+            </h1>
+            <p style={{
+              fontSize: '1.1rem',
+              maxWidth: '800px',
+              margin: '0 auto 2rem',
+              color: 'rgba(255,255,255,0.9)',
+              lineHeight: '1.6'
+            }}>
+              Discover how KDCU is investing in key infrastructure and partnerships to strengthen our cooperative network and support our member communities across the Kagera region.
+            </p>
+            <div style={{
+              display: 'flex',
+              gap: '1rem',
+              justifyContent: 'center',
+              flexWrap: 'wrap'
+            }}>
+              <button style={{
+                backgroundColor: 'white',
+                color: '#FEA116',
+                padding: '1rem 2rem',
+                borderRadius: '8px',
+                border: 'none',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#f3f4f6';
+                e.target.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'white';
+                e.target.style.transform = 'translateY(0)';
+              }}
+              >
+                View Projects
+              </button>
+              <button style={{
+                backgroundColor: 'transparent',
+                color: 'white',
+                padding: '1rem 2rem',
+                borderRadius: '8px',
+                border: '2px solid white',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = 'white';
+                e.target.style.color = '#FEA116';
+                e.target.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.color = 'white';
+                e.target.style.transform = 'translateY(0)';
+              }}
+              >
+                Partner With Us
+              </button>
             </div>
           </div>
         </section>
@@ -110,13 +183,10 @@ const InvestmentsPage = () => {
             
             <div className="grid-3">
               {investments.map((investment, index) => (
-                <div key={index} className="card-white">
+                <div key={index} className="card">
                   <h3 className="card-title">{investment.title}</h3>
-                  <p className="investment-amount" style={{color: '#92400e', fontWeight: 'bold', fontSize: '1.2rem', margin: '1rem 0'}}>
-                    {investment.amount}
-                  </p>
                   <p className="card-text">{investment.description}</p>
-                  <button className="button" style={{marginTop: '1rem'}}>
+                  <button className="button">
                     Learn More
                   </button>
                 </div>

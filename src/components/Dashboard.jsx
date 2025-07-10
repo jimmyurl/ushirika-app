@@ -1,3 +1,4 @@
+// AdminDashboard.jsx (Refactored)
 import { useState, useEffect } from 'react';
 import {
   Coffee, Users, Award, TrendingUp, Settings, Image, Edit3, Plus,
@@ -16,9 +17,9 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Reintroduced isMenuOpen state
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Data states (keeping original for now)
+  // Data states
   const [carouselSlides, setCarouselSlides] = useState([
     {
       id: 1,
@@ -55,15 +56,6 @@ const Dashboard = () => {
       price: "1,300",
       image_url: null,
       category: "premium",
-      is_active: true
-    },
-    {
-      id: 2,
-      name: "4C Coffee Certification",
-      description: "4C certification applies high standards on economic, social and environmental conditions for coffee production and processing to establish sustainable practices.",
-      price: "1,800",
-      image_url: null,
-      category: "certified",
       is_active: true
     }
   ]);
@@ -106,13 +98,17 @@ const Dashboard = () => {
     }
   ]);
 
-  // Modal states
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState('');
-  const [editingItem, setEditingItem] = useState(null);
+  // Form related states, specific for each type
+  const [showForm, setShowForm] = useState(false); // Controls form visibility, like AdminProductsPanel.jsx
+  const [currentFormType, setCurrentFormType] = useState(''); // What type of form is currently open
+  const [editingItem, setEditingItem] = useState(null); // The item being edited
 
-  // Form states - FIX: Corrected useState initialization
-  const [formData, setFormData] = useState({});
+  // Separate formData states for each type to avoid conflicts
+  const [carouselForm, setCarouselForm] = useState({});
+  const [productForm, setProductForm] = useState({});
+  const [teamForm, setTeamForm] = useState({});
+  const [testimonialForm, setTestimonialForm] = useState({});
+  const [investmentForm, setInvestmentForm] = useState({});
 
   const showMessage = (type, text) => {
     setMessage({ type, text });
@@ -125,83 +121,89 @@ const Dashboard = () => {
     window.location.href = '/login';
   };
 
-  const openModal = (type, item = null) => {
-    setModalType(type);
+  const openForm = (type, item = null) => {
+    setCurrentFormType(type);
     setEditingItem(item);
-    setFormData(item || {});
-    setShowModal(true);
+    // Initialize the correct form state based on type
+    const initialData = JSON.parse(JSON.stringify(item || {}));
+    switch (type) {
+      case 'carousel': setCarouselForm(initialData); break;
+      case 'product': setProductForm(initialData); break;
+      case 'team': setTeamForm(initialData); break;
+      case 'testimonial': setTestimonialForm(initialData); break;
+      case 'investment': setInvestmentForm(initialData); break;
+      default: break;
+    }
+    setShowForm(true);
   };
 
-  const closeModal = () => {
-    setShowModal(false);
-    setModalType('');
+  const closeForm = () => {
+    setShowForm(false);
+    setCurrentFormType('');
     setEditingItem(null);
-    setFormData({});
+    // Clear all form states
+    setCarouselForm({});
+    setProductForm({});
+    setTeamForm({});
+    setTestimonialForm({});
+    setInvestmentForm({});
   };
 
-  const handleSave = async () => {
+  const handleSave = async (type) => {
     setLoading(true);
+    let dataToSave = {};
+    let setFunction = null;
+
+    switch (type) {
+      case 'carousel':
+        dataToSave = carouselForm;
+        setFunction = setCarouselSlides;
+        break;
+      case 'product':
+        dataToSave = productForm;
+        setFunction = setProducts;
+        break;
+      case 'team':
+        dataToSave = teamForm;
+        setFunction = setTeamMembers;
+        break;
+      case 'testimonial':
+        dataToSave = testimonialForm;
+        setFunction = setTestimonials;
+        break;
+      case 'investment':
+        dataToSave = investmentForm;
+        setFunction = setInvestments;
+        break;
+      default:
+        setLoading(false);
+        return;
+    }
+
     try {
       // Simulate API call - replace with actual Supabase operations
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Update local state based on modal type
-      switch (modalType) {
-        case 'carousel':
-          if (editingItem) {
-            setCarouselSlides(prev => prev.map(slide =>
-              slide.id === editingItem.id ? { ...slide, ...formData } : slide
-            ));
-          } else {
-            setCarouselSlides(prev => [...prev, {
-              id: Date.now(),
-              ...formData,
-              order_index: prev.length
-            }]);
-          }
-          break;
-        case 'product':
-          if (editingItem) {
-            setProducts(prev => prev.map(product =>
-              product.id === editingItem.id ? { ...product, ...formData } : product
-            ));
-          } else {
-            setProducts(prev => [...prev, { id: Date.now(), ...formData, is_active: true }]);
-          }
-          break;
-        case 'team':
-          if (editingItem) {
-            setTeamMembers(prev => prev.map(member =>
-              member.id === editingItem.id ? { ...member, ...formData } : member
-            ));
-          } else {
-            setTeamMembers(prev => [...prev, { id: Date.now(), ...formData, is_active: true }]);
-          }
-          break;
-        case 'testimonial':
-          if (editingItem) {
-            setTestimonials(prev => prev.map(testimonial =>
-              testimonial.id === editingItem.id ? { ...testimonial, ...formData } : testimonial
-            ));
-          } else {
-            setTestimonials(prev => [...prev, { id: Date.now(), ...formData }]);
-          }
-          break;
-        case 'investment':
-          if (editingItem) {
-            setInvestments(prev => prev.map(investment =>
-              investment.id === editingItem.id ? { ...investment, ...formData } : investment
-            ));
-          } else {
-            setInvestments(prev => [...prev, { id: Date.now(), ...formData }]);
-          }
-          break;
+      if (editingItem) {
+        setFunction(prev => prev.map(item =>
+          item.id === editingItem.id ? { ...item, ...dataToSave } : item
+        ));
+      } else {
+        setFunction(prev => [...prev, {
+          id: Date.now(),
+          ...dataToSave,
+          // Add default active/featured status based on type if not already set
+          ...(type === 'carousel' && { is_active: true }),
+          ...(type === 'product' && { is_active: true }),
+          ...(type === 'team' && { is_active: true }),
+          ...(type === 'testimonial' && { is_featured: false }), // Default for testimonial
+        }]);
       }
 
-      closeModal();
-      showMessage('success', `${modalType} ${editingItem ? 'updated' : 'created'} successfully!`);
+      closeForm();
+      showMessage('success', `${type.charAt(0).toUpperCase() + type.slice(1)} ${editingItem ? 'updated' : 'created'} successfully!`);
     } catch (error) {
-      showMessage('error', 'Failed to save changes. Please try again.');
+      showMessage('error', `Failed to save ${type}. Please try again.`);
     } finally {
       setLoading(false);
     }
@@ -215,21 +217,11 @@ const Dashboard = () => {
       await new Promise(resolve => setTimeout(resolve, 500));
 
       switch (type) {
-        case 'carousel':
-          setCarouselSlides(prev => prev.filter(slide => slide.id !== id));
-          break;
-        case 'product':
-          setProducts(prev => prev.filter(product => product.id !== id));
-          break;
-        case 'team':
-          setTeamMembers(prev => prev.filter(member => member.id !== id));
-          break;
-        case 'testimonial':
-          setTestimonials(prev => prev.filter(testimonial => testimonial.id !== id));
-          break;
-        case 'investment':
-          setInvestments(prev => prev.filter(investment => investment.id !== id));
-          break;
+        case 'carousel': setCarouselSlides(prev => prev.filter(slide => slide.id !== id)); break;
+        case 'product': setProducts(prev => prev.filter(product => product.id !== id)); break;
+        case 'team': setTeamMembers(prev => prev.filter(member => member.id !== id)); break;
+        case 'testimonial': setTestimonials(prev => prev.filter(testimonial => testimonial.id !== id)); break;
+        case 'investment': setInvestments(prev => prev.filter(investment => investment.id !== id)); break;
       }
 
       showMessage('success', 'Item deleted successfully!');
@@ -267,7 +259,6 @@ const Dashboard = () => {
     }
   };
 
-  // Sidebar Component - Reintroduced
   const Sidebar = () => (
     <aside className={`admin-sidebar ${isMenuOpen ? 'admin-sidebar-open' : ''}`}>
       <div className="admin-sidebar-header">
@@ -331,7 +322,6 @@ const Dashboard = () => {
   const Header = () => (
     <header className="admin-header">
       <div className="admin-header-container">
-        {/* Reintroduced menu button for mobile */}
         <button
           onClick={() => setIsMenuOpen(true)}
           className="admin-menu-button"
@@ -361,7 +351,7 @@ const Dashboard = () => {
   );
 
   const OverviewTab = () => (
-    <div className="admin-panel"> {/* ADD THIS WRAPPER */}
+    <div className="admin-panel">
       <div className="admin-welcome-banner">
         <div className="admin-welcome-content">
           <h1 className="admin-welcome-title">Welcome to KDCU Admin Dashboard</h1>
@@ -380,7 +370,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-  
+
       <div className="admin-dashboard-stats">
         <div className="admin-stat-card">
           <div className="admin-stat-header">Total AMCOS</div>
@@ -476,18 +466,17 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Quick Actions (example from AdminDashboard.jsx) */}
       <div className="admin-panel admin-mt-4">
         <h2 className="admin-section-title">Quick Actions</h2>
         <div className="admin-actions-grid">
-          <button onClick={() => openModal('carousel')} className="admin-action-card">
+          <button onClick={() => openForm('carousel')} className="admin-action-card">
             <Plus size={24} className="admin-action-icon admin-action-icon-primary" />
             <div>
               <h3 className="admin-action-title">Add New Carousel Slide</h3>
               <p className="admin-action-description">Quickly add a new slide to the hero section.</p>
             </div>
           </button>
-          <button onClick={() => openModal('product')} className="admin-action-card">
+          <button onClick={() => openForm('product')} className="admin-action-card">
             <Plus size={24} className="admin-action-icon admin-action-icon-success" />
             <div>
               <h3 className="admin-action-title">Add New Product</h3>
@@ -500,207 +489,13 @@ const Dashboard = () => {
     </div>
   );
 
-// In your renderTabContent() function, replace the return statements with these fixed versions:
-
-const renderTabContent = () => {
-  switch (activeTab) {
-    case 'overview':
-      return <OverviewTab />;
-      
-    case 'carousel':
-      return (
-        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
-          <DataTable
-            data={carouselSlides}
-            type="carousel"
-            columns={[
-              { key: 'title', label: 'Title' },
-              { key: 'subtitle', label: 'Subtitle' },
-              { key: 'is_active', label: 'Active', render: (val) => val ? 'Yes' : 'No' }
-            ]}
-          />
-        </div>
-      );
-      
-    case 'stats':
-      return (
-        <div className="admin-panel">
-          <h3 className="admin-section-title">Update Statistics</h3>
-          <div className="admin-form-grid">
-            <div>
-              <label className="admin-label">Number of AMCOS</label>
-              <input
-                type="number"
-                value={stats.amcos_count}
-                onChange={(e) => setStats(prev => ({ ...prev, amcos_count: parseInt(e.target.value) }))}
-                className="admin-input"
-              />
-            </div>
-
-            <div>
-              <label className="admin-label">Staff Count</label>
-              <input
-                type="number"
-                value={stats.staff_count}
-                onChange={(e) => setStats(prev => ({ ...prev, staff_count: parseInt(e.target.value) }))}
-                className="admin-input"
-              />
-            </div>
-
-            <div>
-              <label className="admin-label">Coffee Plants</label>
-              <input
-                type="number"
-                value={stats.coffee_plants}
-                onChange={(e) => setStats(prev => ({ ...prev, coffee_plants: parseInt(e.target.value) }))}
-                className="admin-input"
-              />
-            </div>
-
-            <div>
-              <label className="admin-label">Active Farmers</label>
-              <input
-                type="number"
-                value={stats.active_farmers}
-                onChange={(e) => setStats(prev => ({ ...prev, active_farmers: parseInt(e.target.value) }))}
-                className="admin-input"
-              />
-            </div>
-          </div>
-          <button onClick={() => updateStats(stats)} disabled={loading} className="admin-btn admin-btn-primary admin-mt-4">
-            {loading ? 'Updating...' : 'Update Statistics'}
-          </button>
-        </div>
-      );
-      
-    case 'products':
-      return (
-        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
-          <DataTable
-            data={products}
-            type="product"
-            columns={[
-              { key: 'name', label: 'Product Name' },
-              { key: 'price', label: 'Price' },
-              { key: 'category', label: 'Category' },
-              { key: 'is_active', label: 'Active', render: (val) => val ? 'Yes' : 'No' }
-            ]}
-          />
-        </div>
-      );
-      
-    case 'team':
-      return (
-        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
-          <DataTable
-            data={teamMembers}
-            type="team"
-            columns={[
-              { key: 'name', label: 'Name' },
-              { key: 'position', label: 'Position' },
-              { key: 'email', label: 'Email' }
-            ]}
-          />
-        </div>
-      );
-      
-    case 'testimonials':
-      return (
-        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
-          <DataTable
-            data={testimonials}
-            type="testimonial"
-            columns={[
-              { key: 'name', label: 'Name' },
-              { key: 'role', label: 'Role' },
-              { key: 'text', label: 'Testimonial', render: (val) => `${val.substring(0, 50)}...` },
-              { key: 'rating', label: 'Rating' }
-            ]}
-          />
-        </div>
-      );
-      
-    case 'investments':
-      return (
-        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
-          <DataTable
-            data={investments}
-            type="investment"
-            columns={[
-              { key: 'title', label: 'Title' },
-              { key: 'amount', label: 'Amount' },
-              { key: 'status', label: 'Status' }
-            ]}
-          />
-        </div>
-      );
-      
-    case 'settings':
-      return (
-        <div className="admin-panel">
-          <h3 className="admin-section-title">Website Settings</h3>
-          <div className="admin-form-grid">
-            <div>
-              <label className="admin-label">Website Name</label>
-              <input
-                type="text"
-                defaultValue="KDCU Limited"
-                className="admin-input"
-              />
-            </div>
-
-            <div>
-              <label className="admin-label">Contact Email</label>
-              <input
-                type="email"
-                defaultValue="info@kdculimited.co.tz"
-                className="admin-input"
-              />
-            </div>
-
-            <div>
-              <label className="admin-label">Contact Phone</label>
-              <input
-                type="tel"
-                defaultValue="+255 28 222 xxxx"
-                className="admin-input"
-              />
-            </div>
-
-            <div>
-              <label className="admin-label">Address</label>
-              <textarea
-                defaultValue="Karagwe, Kagera Region, Tanzania"
-                rows={3}
-                className="admin-input"
-              />
-            </div>
-
-            <button className="admin-btn admin-btn-primary">
-              Save Settings
-            </button>
-          </div>
-        </div>
-      );
-
-    default:
-      return (
-        <div className="admin-panel"> {/* ADD THIS WRAPPER */}
-          <div>Select a tab to manage content</div>
-        </div>
-      );
-  }
-};
-
-// ALSO UPDATE YOUR DataTable COMPONENT TO REMOVE DUPLICATE admin-panel WRAPPER:
-
 const DataTable = ({ data, type, columns }) => (
-  <> {/* Remove the admin-panel wrapper from here since we're adding it in renderTabContent */}
+  <>
     <div className="admin-panel-header">
       <h3 className="admin-section-title">
         {type.charAt(0).toUpperCase() + type.slice(1)} Management
       </h3>
-      <button onClick={() => openModal(type)} className="admin-btn admin-btn-primary">
+      <button onClick={() => openForm(type)} className="admin-btn admin-btn-primary">
         <Plus size={16} /> Add New
       </button>
     </div>
@@ -726,7 +521,7 @@ const DataTable = ({ data, type, columns }) => (
               ))}
               <td>
                 <div className="admin-action-buttons">
-                  <button onClick={() => openModal(type, item)} className="admin-btn admin-btn-icon">
+                  <button onClick={() => openForm(type, item)} className="admin-btn admin-btn-icon">
                     <Edit3 size={16} />
                   </button>
                   <button onClick={() => handleDelete(type, item.id)} className="admin-btn admin-btn-icon admin-btn-danger">
@@ -742,201 +537,577 @@ const DataTable = ({ data, type, columns }) => (
   </>
 );
 
-  const Modal = () => {
-    if (!showModal) return null;
-    const renderFormFields = () => {
-      switch (modalType) {
-        case 'carousel':
-          return (
-            <>
-              <div className="admin-form-group">
-                <label className="admin-label">Title</label>
-                <input type="text" value={formData.title || ''} onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Subtitle</label>
-                <input type="text" value={formData.subtitle || ''} onChange={(e) => setFormData(prev => ({ ...prev, subtitle: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Description</label>
-                <textarea value={formData.description || ''} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} rows={3} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Image URL</label>
-                <input type="url" value={formData.image_url || ''} onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group admin-checkbox-group">
-                <input type="checkbox" checked={formData.is_active || false} onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))} id="carousel-active" />
-                <label htmlFor="carousel-active" className="admin-checkbox-label">Is Active</label>
-              </div>
-            </>
-          );
-        case 'product':
-          return (
-            <>
-              <div className="admin-form-group">
-                <label className="admin-label">Product Name</label>
-                <input type="text" value={formData.name || ''} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Description</label>
-                <textarea value={formData.description || ''} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} rows={3} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Price</label>
-                <input type="text" value={formData.price || ''} onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Image URL</label>
-                <input type="url" value={formData.image_url || ''} onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Category</label>
-                <input type="text" value={formData.category || ''} onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group admin-checkbox-group">
-                <input type="checkbox" checked={formData.is_active || false} onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))} id="product-active" />
-                <label htmlFor="product-active" className="admin-checkbox-label">Is Active</label>
-              </div>
-            </>
-          );
-        case 'team':
-          return (
-            <>
-              <div className="admin-form-group">
-                <label className="admin-label">Name</label>
-                <input type="text" value={formData.name || ''} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Position</label>
-                <input type="text" value={formData.position || ''} onChange={(e) => setFormData(prev => ({ ...prev, position: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Description</label>
-                <textarea value={formData.description || ''} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} rows={3} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Image URL</label>
-                <input type="url" value={formData.image_url || ''} onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Email</label>
-                <input type="email" value={formData.email || ''} onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Phone</label>
-                <input type="tel" value={formData.phone || ''} onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group admin-checkbox-group">
-                <input type="checkbox" checked={formData.is_active || false} onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))} id="team-active" />
-                <label htmlFor="team-active" className="admin-checkbox-label">Is Active</label>
-              </div>
-            </>
-          );
-        case 'testimonial':
-          return (
-            <>
-              <div className="admin-form-group">
-                <label className="admin-label">Name</label>
-                <input type="text" value={formData.name || ''} onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Role</label>
-                <input type="text" value={formData.role || ''} onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Cooperative</label>
-                <input type="text" value={formData.cooperative || ''} onChange={(e) => setFormData(prev => ({ ...prev, cooperative: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Testimonial Text</label>
-                <textarea value={formData.text || ''} onChange={(e) => setFormData(prev => ({ ...prev, text: e.target.value }))} rows={3} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Rating (1-5)</label>
-                <input type="number" value={formData.rating || ''} onChange={(e) => setFormData(prev => ({ ...prev, rating: parseInt(e.target.value) }))} min="1" max="5" className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Image URL</label>
-                <input type="url" value={formData.image_url || ''} onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group admin-checkbox-group">
-                <input type="checkbox" checked={formData.is_featured || false} onChange={(e) => setFormData(prev => ({ ...prev, is_featured: e.target.checked }))} id="testimonial-featured" />
-                <label htmlFor="testimonial-featured" className="admin-checkbox-label">Is Featured</label>
-              </div>
-            </>
-          );
-        case 'investment':
-          return (
-            <>
-              <div className="admin-form-group">
-                <label className="admin-label">Title</label>
-                <input type="text" value={formData.title || ''} onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Amount</label>
-                <input type="text" value={formData.amount || ''} onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Description</label>
-                <textarea value={formData.description || ''} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} rows={3} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Status</label>
-                <input type="text" value={formData.status || ''} onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Start Date</label>
-                <input type="date" value={formData.start_date || ''} onChange={(e) => setFormData(prev => ({ ...prev, start_date: e.target.value }))} className="admin-input" />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">End Date</label>
-                <input type="date" value={formData.end_date || ''} onChange={(e) => setFormData(prev => ({ ...prev, end_date: e.target.value }))} className="admin-input" />
-              </div>
-            </>
-          );
-        default:
-          return null;
-      }
-    };
+const renderFormContent = (type) => {
+  let currentFormData;
+  let setCurrentFormData;
 
-    return (
-      <div className="admin-modal-overlay">
-        <div className="admin-modal-content">
-          <div className="admin-modal-header">
-            <h3 className="admin-modal-title">
-              {editingItem ? `Edit ${modalType}` : `Add New ${modalType}`}
-            </h3>
-            <button onClick={closeModal} className="admin-modal-close">
-              <X size={20} />
-            </button>
+  switch (type) {
+    case 'carousel':
+      currentFormData = carouselForm;
+      setCurrentFormData = setCarouselForm;
+      break;
+    case 'product':
+      currentFormData = productForm;
+      setCurrentFormData = setProductForm;
+      break;
+    case 'team':
+      currentFormData = teamForm;
+      setCurrentFormData = setTeamForm;
+      break;
+    case 'testimonial':
+      currentFormData = testimonialForm;
+      setCurrentFormData = setTestimonialForm;
+      break;
+    case 'investment':
+      currentFormData = investmentForm;
+      setCurrentFormData = setInvestmentForm;
+      break;
+    default:
+      return null;
+  }
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setCurrentFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  switch (type) {
+    case 'carousel':
+      return (
+        <form onSubmit={(e) => { e.preventDefault(); handleSave('carousel'); }} className="admin-form">
+          <h2 className="form-title">{editingItem ? 'Edit Carousel Slide' : 'Add New Carousel Slide'}</h2>
+          <div className="admin-form-group">
+            <label className="admin-label">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={currentFormData.title || ''}
+              onChange={handleInputChange}
+              className="admin-input"
+            />
           </div>
-          <div className="admin-modal-body">
-            {renderFormFields()}
+          <div className="admin-form-group">
+            <label className="admin-label">Subtitle</label>
+            <input
+              type="text"
+              name="subtitle"
+              value={currentFormData.subtitle || ''}
+              onChange={handleInputChange}
+              className="admin-input"
+            />
           </div>
-          <div className="admin-modal-footer">
-            <button onClick={closeModal} className="admin-btn admin-btn-secondary">
-              Cancel
-            </button>
-            <button onClick={handleSave} disabled={loading} className="admin-btn admin-btn-primary">
+          <div className="admin-form-group">
+            <label className="admin-label">Description</label>
+            <textarea
+              name="description"
+              value={currentFormData.description || ''}
+              onChange={handleInputChange}
+              rows={3}
+              className="admin-input"
+            />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Image URL</label>
+            <input
+              type="url"
+              name="image_url"
+              value={currentFormData.image_url || ''}
+              onChange={handleInputChange}
+              className="admin-input"
+            />
+          </div>
+          <div className="admin-form-group admin-checkbox-group">
+            <input
+              type="checkbox"
+              name="is_active"
+              checked={currentFormData.is_active || false}
+              onChange={handleInputChange}
+              id="carousel-active"
+            />
+            <label htmlFor="carousel-active" className="admin-checkbox-label">Is Active</label>
+          </div>
+          <div className="form-actions">
+            <button type="button" onClick={closeForm} className="admin-btn admin-btn-secondary">Cancel</button>
+            <button type="submit" disabled={loading} className="admin-btn admin-btn-primary">
               {loading ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
+        </form>
+      );
+    case 'product':
+      // Dummy data for product form as we don't have AdminProductsPanel's conditions/categories here
+      const conditions = ['New', 'Used'];
+      const categories = ['Electronics', 'Coffee'];
+      return (
+        <form onSubmit={(e) => { e.preventDefault(); handleSave('product'); }} className="admin-form">
+          <h2 className="form-title">{editingItem ? 'Edit Product' : 'Add New Product'}</h2>
+          <div className="form-grid">
+            <div className="form-column">
+              <div className="admin-form-group">
+                <label className="admin-label">Product Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={currentFormData.name || ''}
+                  onChange={handleInputChange}
+                  className="admin-input"
+                  required
+                />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Description</label>
+                <textarea
+                  name="description"
+                  value={currentFormData.description || ''}
+                  onChange={handleInputChange}
+                  rows={3}
+                  className="admin-input"
+                  required
+                />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Price</label>
+                <input
+                  type="text" // Keep as text to allow flexible input, handle parsing on save
+                  name="price"
+                  value={currentFormData.price || ''}
+                  onChange={handleInputChange}
+                  className="admin-input"
+                />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Stock Quantity</label>
+                <input
+                  type="number"
+                  name="stock_quantity"
+                  value={currentFormData.stock_quantity || ''}
+                  onChange={handleInputChange}
+                  className="admin-input"
+                  required
+                />
+              </div>
+            </div>
+            <div className="form-column">
+              <div className="admin-form-group">
+                <label className="admin-label">Image URL</label>
+                <input
+                  type="url"
+                  name="image_url"
+                  value={currentFormData.image_url || ''}
+                  onChange={handleInputChange}
+                  className="admin-input"
+                />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Category</label>
+                <select
+                  name="category"
+                  value={currentFormData.category || ''}
+                  onChange={handleInputChange}
+                  className="admin-input"
+                  required
+                >
+                  <option value="">Select a category</option>
+                  {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                </select>
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Condition</label>
+                <select
+                  name="condition"
+                  value={currentFormData.condition || 'New'}
+                  onChange={handleInputChange}
+                  className="admin-input"
+                  required
+                >
+                  {conditions.map(cond => <option key={cond} value={cond}>{cond}</option>)}
+                </select>
+              </div>
+              <div className="admin-form-group admin-checkbox-group">
+                <input
+                  type="checkbox"
+                  name="is_active"
+                  checked={currentFormData.is_active || false}
+                  onChange={handleInputChange}
+                  id="product-active"
+                />
+                <label htmlFor="product-active" className="admin-checkbox-label">Is Active</label>
+              </div>
+              <div className="admin-form-group admin-checkbox-group">
+                <input
+                  type="checkbox"
+                  name="is_featured"
+                  checked={currentFormData.is_featured || false}
+                  onChange={handleInputChange}
+                  id="product-featured"
+                />
+                <label htmlFor="product-featured" className="admin-checkbox-label">Is Featured</label>
+              </div>
+            </div>
+          </div>
+          <div className="form-actions">
+            <button type="button" onClick={closeForm} className="admin-btn admin-btn-secondary">Cancel</button>
+            <button type="submit" disabled={loading} className="admin-btn admin-btn-primary">
+              {loading ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </form>
+      );
+    case 'team':
+      return (
+        <form onSubmit={(e) => { e.preventDefault(); handleSave('team'); }} className="admin-form">
+          <h2 className="form-title">{editingItem ? 'Edit Team Member' : 'Add New Team Member'}</h2>
+          <div className="admin-form-group">
+            <label className="admin-label">Name</label>
+            <input type="text" name="name" value={currentFormData.name || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Position</label>
+            <input type="text" name="position" value={currentFormData.position || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Description</label>
+            <textarea name="description" value={currentFormData.description || ''} onChange={handleInputChange} rows={3} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Image URL</label>
+            <input type="url" name="image_url" value={currentFormData.image_url || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Email</label>
+            <input type="email" name="email" value={currentFormData.email || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Phone</label>
+            <input type="tel" name="phone" value={currentFormData.phone || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group admin-checkbox-group">
+            <input type="checkbox" name="is_active" checked={currentFormData.is_active || false} onChange={handleInputChange} id="team-active" />
+            <label htmlFor="team-active" className="admin-checkbox-label">Is Active</label>
+          </div>
+          <div className="form-actions">
+            <button type="button" onClick={closeForm} className="admin-btn admin-btn-secondary">Cancel</button>
+            <button type="submit" disabled={loading} className="admin-btn admin-btn-primary">
+              {loading ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </form>
+      );
+    case 'testimonial':
+      return (
+        <form onSubmit={(e) => { e.preventDefault(); handleSave('testimonial'); }} className="admin-form">
+          <h2 className="form-title">{editingItem ? 'Edit Testimonial' : 'Add New Testimonial'}</h2>
+          <div className="admin-form-group">
+            <label className="admin-label">Name</label>
+            <input type="text" name="name" value={currentFormData.name || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Role</label>
+            <input type="text" name="role" value={currentFormData.role || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Cooperative</label>
+            <input type="text" name="cooperative" value={currentFormData.cooperative || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Testimonial Text</label>
+            <textarea name="text" value={currentFormData.text || ''} onChange={handleInputChange} rows={3} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Rating (1-5)</label>
+            <input
+              type="number"
+              name="rating"
+              value={currentFormData.rating || ''}
+              onChange={(e) => {
+                const value = e.target.value;
+                const parsedValue = value === '' ? '' : parseInt(value);
+                setCurrentFormData(prev => ({ ...prev, rating: parsedValue }));
+              }}
+              min="1"
+              max="5"
+              className="admin-input"
+            />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Image URL</label>
+            <input type="url" name="image_url" value={currentFormData.image_url || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group admin-checkbox-group">
+            <input type="checkbox" name="is_featured" checked={currentFormData.is_featured || false} onChange={handleInputChange} id="testimonial-featured" />
+            <label htmlFor="testimonial-featured" className="admin-checkbox-label">Is Featured</label>
+          </div>
+          <div className="form-actions">
+            <button type="button" onClick={closeForm} className="admin-btn admin-btn-secondary">Cancel</button>
+            <button type="submit" disabled={loading} className="admin-btn admin-btn-primary">
+              {loading ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </form>
+      );
+    case 'investment':
+      return (
+        <form onSubmit={(e) => { e.preventDefault(); handleSave('investment'); }} className="admin-form">
+          <h2 className="form-title">{editingItem ? 'Edit Investment' : 'Add New Investment'}</h2>
+          <div className="admin-form-group">
+            <label className="admin-label">Title</label>
+            <input type="text" name="title" value={currentFormData.title || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Amount</label>
+            <input type="text" name="amount" value={currentFormData.amount || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Description</label>
+            <textarea name="description" value={currentFormData.description || ''} onChange={handleInputChange} rows={3} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Status</label>
+            <input type="text" name="status" value={currentFormData.status || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Start Date</label>
+            <input type="date" name="start_date" value={currentFormData.start_date || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">End Date</label>
+            <input type="date" name="end_date" value={currentFormData.end_date || ''} onChange={handleInputChange} className="admin-input" />
+          </div>
+          <div className="form-actions">
+            <button type="button" onClick={closeForm} className="admin-btn admin-btn-secondary">Cancel</button>
+            <button type="submit" disabled={loading} className="admin-btn admin-btn-primary">
+              {loading ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </form>
+      );
+    default:
+      return null;
+  }
+};
+
+
+  const renderTabContent = () => {
+    // If a form is shown, render only the form specific to the active tab type.
+    if (showForm) {
+      return (
+        <div className="admin-modal-overlay"> {/* Re-using modal overlay for visual consistency */}
+          <div className="admin-modal-content">
+            <div className="admin-modal-header">
+              <button onClick={closeForm} className="admin-modal-close">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="admin-modal-body">
+              {renderFormContent(currentFormType)}
+            </div>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+
+    // Otherwise, render the regular tab content
+    switch (activeTab) {
+      case 'overview':
+        return <OverviewTab />;
+
+      case 'carousel':
+        return (
+          <div className="admin-panel">
+            <DataTable
+              data={carouselSlides}
+              type="carousel"
+              columns={[
+                { key: 'title', label: 'Title' },
+                { key: 'subtitle', label: 'Subtitle' },
+                { key: 'is_active', label: 'Active', render: (val) => val ? 'Yes' : 'No' }
+              ]}
+            />
+          </div>
+        );
+
+      case 'stats':
+        return (
+          <div className="admin-panel">
+            <h3 className="admin-section-title">Update Statistics</h3>
+            <div className="admin-form-grid">
+              <div>
+                <label className="admin-label">Number of AMCOS</label>
+                <input
+                  type="number"
+                  value={stats.amcos_count}
+                  onChange={(e) => setStats(prev => ({ ...prev, amcos_count: parseInt(e.target.value) }))}
+                  className="admin-input"
+                />
+              </div>
+
+              <div>
+                <label className="admin-label">Staff Count</label>
+                <input
+                  type="number"
+                  value={stats.staff_count}
+                  onChange={(e) => setStats(prev => ({ ...prev, staff_count: parseInt(e.target.value) }))}
+                  className="admin-input"
+                />
+              </div>
+
+              <div>
+                <label className="admin-label">Coffee Plants</label>
+                <input
+                  type="number"
+                  value={stats.coffee_plants}
+                  onChange={(e) => setStats(prev => ({ ...prev, coffee_plants: parseInt(e.target.value) }))}
+                  className="admin-input"
+                />
+              </div>
+
+              <div>
+                <label className="admin-label">Active Farmers</label>
+                <input
+                  type="number"
+                  value={stats.active_farmers}
+                  onChange={(e) => setStats(prev => ({ ...prev, active_farmers: parseInt(e.target.value) }))}
+                  className="admin-input"
+                />
+              </div>
+            </div>
+            <button onClick={() => updateStats(stats)} disabled={loading} className="admin-btn admin-btn-primary admin-mt-4">
+              {loading ? 'Updating...' : 'Update Statistics'}
+            </button>
+          </div>
+        );
+
+      case 'products':
+        return (
+          <div className="admin-panel">
+            <DataTable
+              data={products}
+              type="product"
+              columns={[
+                { key: 'name', label: 'Product Name' },
+                { key: 'price', label: 'Price' },
+                { key: 'category', label: 'Category' },
+                { key: 'is_active', label: 'Active', render: (val) => val ? 'Yes' : 'No' }
+              ]}
+            />
+          </div>
+        );
+
+      case 'team':
+        return (
+          <div className="admin-panel">
+            <DataTable
+              data={teamMembers}
+              type="team"
+              columns={[
+                { key: 'name', label: 'Name' },
+                { key: 'position', label: 'Position' },
+                { key: 'email', label: 'Email' }
+              ]}
+            />
+          </div>
+        );
+
+      case 'testimonials':
+        return (
+          <div className="admin-panel">
+            <DataTable
+              data={testimonials}
+              type="testimonial"
+              columns={[
+                { key: 'name', label: 'Name' },
+                { key: 'role', label: 'Role' },
+                { key: 'text', label: 'Testimonial', render: (val) => `${val.substring(0, 50)}...` },
+                { key: 'rating', label: 'Rating' }
+              ]}
+            />
+          </div>
+        );
+
+      case 'investments':
+        return (
+          <div className="admin-panel">
+            <DataTable
+              data={investments}
+              type="investment"
+              columns={[
+                { key: 'title', label: 'Title' },
+                { key: 'amount', label: 'Amount' },
+                { key: 'status', label: 'Status' }
+              ]}
+            />
+          </div>
+        );
+
+      case 'settings':
+        return (
+          <div className="admin-panel">
+            <h3 className="admin-section-title">Website Settings</h3>
+            <div className="admin-form-grid">
+              <div>
+                <label className="admin-label">Website Name</label>
+                <input
+                  type="text"
+                  defaultValue="KDCU Limited"
+                  className="admin-input"
+                />
+              </div>
+
+              <div>
+                <label className="admin-label">Contact Email</label>
+                <input
+                  type="email"
+                  defaultValue="info@kdculimited.co.tz"
+                  className="admin-input"
+                />
+              </div>
+
+              <div>
+                <label className="admin-label">Contact Phone</label>
+                <input
+                  type="tel"
+                  defaultValue="+255 28 222 xxxx"
+                  className="admin-input"
+                />
+              </div>
+
+              <div>
+                <label className="admin-label">Address</label>
+                <textarea
+                  defaultValue="Karagwe, Kagera Region, Tanzania"
+                  rows={3}
+                  className="admin-input"
+                />
+              </div>
+
+              <button className="admin-btn admin-btn-primary">
+                Save Settings
+              </button>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="admin-panel">
+            <div>Select a tab to manage content</div>
+          </div>
+        );
+    }
   };
 
   return (
-    <div className={`admin-dashboard ${isMenuOpen ? 'admin-mobile-sidebar-open' : ''}`}> {/* Added admin-mobile-sidebar-open class conditionally */}
-      <Sidebar /> {/* Reintroduced Sidebar component */}
+    <div className={`admin-dashboard ${isMenuOpen ? 'admin-mobile-sidebar-open' : ''}`}>
+      <Sidebar />
       <div className="admin-content-wrapper">
         <Header />
         <main className="admin-content">
           {renderTabContent()}
         </main>
       </div>
-      <Modal />
     </div>
   );
 };

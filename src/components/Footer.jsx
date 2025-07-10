@@ -45,11 +45,11 @@ const Footer = () => (
           </div>
           <div style={{display: 'flex', alignItems: 'center', marginBottom: '0.5rem'}}>
             <Phone size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
-            <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>+255 28 222 xxxx</span>
+            <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>+255 28 222 7105</span>
           </div>
           <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
             <Mail size={16} style={{marginRight: '0.5rem', color: '#92400e'}} />
-            <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>info@kdculimited.co.tz</span>
+            <span style={{color: '#9ca3af', fontSize: '0.9rem'}}>info@kdcu.co.tz</span>
           </div>
           
           <div style={{display: 'flex', gap: '1rem'}}>

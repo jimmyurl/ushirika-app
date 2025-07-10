@@ -1,10 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import AboutPage from './components/AboutPage';
 import Contact from './components/Contact';
-import ServicesPage from './components/ServicesPage';
+import EventsPage from './components/EventsPage'; // Import the new EventsPage
 import AMCOSPage from './components/AMCOSPage';
 import InvestmentsPage from './components/InvestmentsPage';
 import LoginPage from './components/LoginPage';
@@ -26,7 +26,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/services" element={<ServicesPage />} />
+            <Route path="/events" element={<EventsPage />} /> {/* New events route */}
             <Route path="/amcos" element={<AMCOSPage />} />
             <Route path="/investments" element={<InvestmentsPage />} />
             <Route path="/contact" element={<Contact />} />

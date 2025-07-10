@@ -52,11 +52,11 @@
   flex-direction: column;
   position: fixed;
   left: 0;
-  top: calc(var(--admin-header-height) + 1px); /* Add 1px for header border */
+  top: var(--admin-header-height); /* Start below the header */
   bottom: 0;
-  height: calc(100vh - var(--admin-header-height) - 1px); /* Subtract border height */
-  z-index: 90; /* Sidebar is above content but below header */
-  transition: transform 0.3s ease, top 0.3s ease; /* Add top to transition */
+  height: calc(100vh - var(--admin-header-height)); /* Subtract header height */
+  z-index: 90;
+  transition: transform 0.3s ease;
 }
 
 .admin-sidebar-header {
@@ -159,13 +159,13 @@
   background-color: var(--admin-card-bg);
   border-bottom: 1px solid var(--admin-border);
   padding: 1rem 1.5rem;
-  position: fixed; /* Changed to fixed */
+  position: fixed;
+  left: 0;
+  right: 0;
   top: 0;
-  left: 0; /* Ensure it starts from the left edge */
-  right: 0; /* Ensure it spans to the right edge */
-  z-index: 100; /* Highest z-index */
-  min-height: var(--admin-header-height); /* Use min-height instead of height */
-  box-sizing: border-box; /* Include padding in height */
+  z-index: 100;
+  min-height: var(--admin-header-height);
+  box-sizing: border-box;
 }
 
 .admin-header-container {
@@ -881,14 +881,19 @@
 /* Media Queries for Responsive Design (from AdminDashboard.css) */
 @media (max-width: 1024px) {
   .admin-content-wrapper {
-    margin-left: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: var(--admin-sidebar-width);
+    padding-top: var(--admin-header-height); /* Push content below header */
+    z-index: 10;
   }
 
   .admin-sidebar {
     transform: translateX(-100%);
     /* On mobile, sidebar starts below the header */
-    top: calc(var(--admin-header-height) + 1px);
-    height: calc(100vh - var(--admin-header-height) - 1px); /* Adjust height */
+    top: var(--admin-header-height); /* Adjusted for mobile */
+    height: calc(100vh - var(--admin-header-height)); /* Adjusted for mobile */
   }
 
   .admin-dashboard.admin-mobile-sidebar-open .admin-sidebar {
