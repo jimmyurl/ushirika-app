@@ -1,5 +1,6 @@
 // Footer.jsx
-import { Coffee, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'; // Added Linkedin
+import { Coffee, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Import Link from React Router
 
 const Footer = () => (
   <footer style={{backgroundColor: '#1f2937', color: 'white', padding: '3rem 0 1rem'}}>
@@ -23,16 +24,16 @@ const Footer = () => (
           <h4 style={{marginBottom: '1rem', color: '#92400e'}}>Quick Links</h4>
           <ul style={{listStyle: 'none', padding: '0', margin: '0'}}>
             <li style={{marginBottom: '0.5rem'}}>
-              <a href="/" style={{color: '#9ca3af', textDecoration: 'none'}}>Home</a>
+              <Link to="/" style={{color: '#9ca3af', textDecoration: 'none'}}>Home</Link>
             </li>
             <li style={{marginBottom: '0.5rem'}}>
-              <a href="/about" style={{color: '#9ca3af', textDecoration: 'none'}}>About Us</a>
+              <Link to="/about" style={{color: '#9ca3af', textDecoration: 'none'}}>About Us</Link>
             </li>
             <li style={{marginBottom: '0.5rem'}}>
-              <a href="/services" style={{color: '#9ca3af', textDecoration: 'none'}}>Services</a>
+              <Link to="/events" style={{color: '#9ca3af', textDecoration: 'none'}}>Events</Link>
             </li>
             <li style={{marginBottom: '0.5rem'}}>
-              <a href="/contact" style={{color: '#9ca3af', textDecoration: 'none'}}>Contact</a>
+              <Link to="/contact" style={{color: '#9ca3af', textDecoration: 'none'}}>Contact</Link>
             </li>
           </ul>
         </div>
